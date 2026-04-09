@@ -67,7 +67,6 @@ CREATE TABLE IF NOT EXISTS hiring_requests (
   start_date   TEXT NOT NULL DEFAULT 'TBD',
   deadline     DATE NOT NULL DEFAULT CURRENT_DATE + INTERVAL '90 days',
   pipeline_stage TEXT NOT NULL DEFAULT 'Request',
-  opening_id   TEXT REFERENCES active_openings(id),
   created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -168,6 +167,39 @@ CREATE TABLE IF NOT EXISTS applications (
                     CHECK (status IN ('Applied','Screening','Interview','Offer','Rejected')),
   education       JSONB,   -- [{college, degree, major, year}]
   submitted_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Rich candidate profiles with full application assets and interview history
+CREATE TABLE IF NOT EXISTS candidate_profiles (
+  id                 SERIAL PRIMARY KEY,
+  candidate_uid      TEXT UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+  application_id     INT REFERENCES applications(id),
+  hiring_request_id  TEXT REFERENCES hiring_requests(id),
+  opening_id         TEXT REFERENCES active_openings(id),
+  request_id         TEXT,
+  name               TEXT NOT NULL,
+  email              TEXT NOT NULL,
+  phone              TEXT,
+  current_location   TEXT,
+  role_applied       TEXT NOT NULL,
+  status             TEXT NOT NULL DEFAULT 'Applied',
+  ref_id             TEXT UNIQUE,
+  linkedin_url       TEXT,
+  github_url         TEXT,
+  resume_path        TEXT,
+  cv_path            TEXT,
+  cover_note         TEXT,
+  academic_background JSONB,
+  education_history  JSONB,
+  skills             JSONB,
+  additional_questions JSONB,
+  ai_interview_summary TEXT,
+  chatbot_transcript JSONB,
+  hiring_manager_notes TEXT,
+  professor_notes     TEXT,
+  hr_notes            TEXT,
+  created_at         TIMESTAMPTZ DEFAULT NOW(),
+  updated_at         TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Admissions tracking per opening

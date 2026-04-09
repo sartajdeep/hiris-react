@@ -105,6 +105,51 @@ async function seed() {
       'INSERT INTO hiring_policies (policy_key,title,description,active,features) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING', policy)
   }
 
+  const jobRoles = [
+    ['ROLE-BIO-2026-001','REQ-PROF-001','BIO-2026-001','Graduate Research Assistant – Computational Biology','Research led by Dr. Sterling, focusing on computational biology experiments and student mentorship.','PH-05','PROF-001','HM-001','JD Draft','Draft'],
+    ['ROLE-NEU-2026-002','REQ-PROF-002','NEU-2026-002','Postdoctoral Fellow – Neuroscience Lab','Postdoc role for neural systems modeling and lab protocol development.','DS-02','PROF-001','HM-001','JD Draft','Draft'],
+    ['ROLE-GEN-2026-003','REQ-PROF-003','GEN-2026-003','Lab Technician III – Genetics','Hands-on lab support for genetics workflows and equipment calibration.','PH-05','PROF-001','HM-001','JD Draft','Draft'],
+  ]
+  for (const role of jobRoles) {
+    await db.query(
+      `INSERT INTO job_roles (id,request_id,opening_id,title,description,department,professor_id,hiring_manager_id,stage,status)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING`, role)
+  }
+
+  const jobDescriptions = [
+    ['ROLE-BIO-2026-001','REQ-PROF-001','BIO-2026-001','Professor','PROF-001',1,'Draft','Initial JD draft for computational biology role with core responsibilities, qualifications, and research expectations.',JSON.stringify([{ reviewer:'Prof. Arpan Kar', note:'Please clarify lab leadership expectations.' }])],
+    ['ROLE-NEU-2026-002','REQ-PROF-002','NEU-2026-002','Professor','PROF-001',1,'Draft','Initial JD draft for neuroscience postdoc with emphasis on modeling and experiment design.',JSON.stringify([{ reviewer:'Prof. Arpan Kar', note:'Add expectations around manuscript development.' }])],
+  ]
+  for (const jd of jobDescriptions) {
+    await db.query(
+      `INSERT INTO job_descriptions (role_id,request_id,opening_id,author_type,author_id,version,status,content,comments)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT DO NOTHING`, jd)
+  }
+
+  const applications = [
+    ['CS-2026-001','Eli Navarro','eli.navarro@example.com','+1 (213) 555-0147','https://linkedin.com/in/elinar','https://github.com/elinav','I have five years of full-stack experience in React and Node.js.','resume-elinar.pdf','cv-elinar.pdf',JSON.stringify([{college:'UCLA',degree:'B.Sc. Computer Science',major:'Software Engineering',year:2019}])],
+    ['DS-2026-007','Maya Patel','maya.patel@example.com','+44 7700 123789','https://linkedin.com/in/mayapatel','https://github.com/mayapatel','My experience spans production ML pipelines and large-scale model evaluation.','resume-maya.pdf','cv-maya.pdf',JSON.stringify([{college:'Imperial College London',degree:'M.Sc. Data Science',major:'Machine Learning',year:2022}])],
+    ['GA-2026-001','Ryan Torres','ryan.torres@example.com','+1 (720) 555-0112','https://linkedin.com/in/ryantorres','https://github.com/ryantorres','Admissions operations and student engagement are my strengths.','resume-ryan.pdf','cv-ryan.pdf',JSON.stringify([{college:'CU Boulder',degree:'B.A. Communications',major:'Organizational Leadership',year:2018}])],
+  ]
+  for (const app of applications) {
+    await db.query(
+      `INSERT INTO applications (opening_id,full_name,email,phone,linkedin_url,github_url,cover_note,resume_path,cv_path,education)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      app
+    )
+  }
+
+  const candidateProfiles = [
+    ['Elena Rodriguez','elena.rodriguez@email.com','+34 612 345 678','Barcelona, Spain','Lead Data Scientist','#HIR-2026-005','CS-2026-001','REQ-PROF-001','https://linkedin.com/in/elena-rodriguez','https://github.com/elena-r','resume-elena.pdf','cv-elena.pdf','Exceptional candidate with Bayesian ML and causal inference experience.',JSON.stringify([{institution:'UPC',degree:'Ph.D. Computational Statistics',year:2020}]),JSON.stringify([{institution:'UPC',degree:'Ph.D. Computational Statistics',year:2020}]),JSON.stringify(['Python','PyTorch','JAX','Bayesian Inference']),JSON.stringify([{question:'Describe a high-impact project','answer':'Built a Bayesian causal model for clinical trials resulting in 22% fewer samples.'}]),'Deep technical fit for senior analytics role.','Excellent technical fit.','Ready for HR interview.']
+  ]
+  for (const profile of candidateProfiles) {
+    await db.query(
+      `INSERT INTO candidate_profiles (name,email,phone,current_location,role_applied,ref_id,opening_id,request_id,linkedin_url,github_url,resume_path,cv_path,cover_note,academic_background,education_history,skills,additional_questions,ai_interview_summary,professor_notes,hr_notes)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`,
+      profile
+    )
+  }
+
   // ── Tasks ─────────────────────────────────────────────────────────────────
   const tasks = [
     ['Review Data Science shortlist','High',null],
