@@ -1,3 +1,74 @@
+/**
+ * @swagger
+ * /api/candidates:
+ *   get:
+ *     summary: List candidates
+ *     tags:
+ *       - Candidates
+ *     parameters:
+ *       - name: opening_id
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Candidate list
+ */
+
+/**
+ * @swagger
+ * /api/candidates/{id}:
+ *   get:
+ *     summary: Get candidate by ID
+ *     tags:
+ *       - Candidates
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Candidate details
+ *       404:
+ *         description: Not found
+ */
+
+/**
+ * @swagger
+ * /api/candidates/{id}/status:
+ *   patch:
+ *     summary: Update candidate status
+ *     tags:
+ *       - Candidates
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               interview_at:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Candidate status updated
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

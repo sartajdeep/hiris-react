@@ -1,3 +1,157 @@
+/**
+ * @swagger
+ * /api/hiring-requests:
+ *   get:
+ *     summary: List hiring requests
+ *     tags:
+ *       - Hiring Requests
+ *     parameters:
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: job_type
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of hiring requests
+ */
+
+/**
+ * @swagger
+ * /api/hiring-requests/{id}:
+ *   get:
+ *     summary: Get a hiring request by ID
+ *     tags:
+ *       - Hiring Requests
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Hiring request details
+ *       404:
+ *         description: Not found
+ */
+
+/**
+ * @swagger
+ * /api/hiring-requests:
+ *   post:
+ *     summary: Create a hiring request
+ *     tags:
+ *       - Hiring Requests
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               requested_by:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Hiring request created
+ */
+
+/**
+ * @swagger
+ * /api/hiring-requests/{id}/status:
+ *   patch:
+ *     summary: Update hiring request status
+ *     tags:
+ *       - Hiring Requests
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Status updated
+ */
+
+/**
+ * @swagger
+ * /api/hiring-requests/{id}:
+ *   patch:
+ *     summary: Update hiring request details
+ *     tags:
+ *       - Hiring Requests
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               job_type:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               positions:
+ *                 type: integer
+ *               start_date:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Hiring request updated
+ */
+
+/**
+ * @swagger
+ * /api/hiring-requests/{id}:
+ *   delete:
+ *     summary: Delete a hiring request
+ *     tags:
+ *       - Hiring Requests
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Hiring request deleted
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

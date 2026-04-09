@@ -1,3 +1,71 @@
+/**
+ * @swagger
+ * /api/admissions:
+ *   get:
+ *     summary: List admissions records
+ *     description: Returns admissions records optionally filtered by opening_id.
+ *     tags:
+ *       - Admissions
+ *     parameters:
+ *       - name: opening_id
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter by opening ID
+ *     responses:
+ *       200:
+ *         description: Admissions list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ */
+
+/**
+ * @swagger
+ * /api/admissions/stats:
+ *   get:
+ *     summary: Get admissions statistics
+ *     tags:
+ *       - Admissions
+ *     parameters:
+ *       - name: opening_id
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Optional opening ID filter
+ *     responses:
+ *       200:
+ *         description: Admissions statistics
+ */
+
+/**
+ * @swagger
+ * /api/admissions/{id}/stage:
+ *   patch:
+ *     summary: Update admissions stage
+ *     tags:
+ *       - Admissions
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stage:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Updated stage
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

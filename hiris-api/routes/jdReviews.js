@@ -1,3 +1,54 @@
+/**
+ * @swagger
+ * /api/jd-reviews/{opening_id}:
+ *   get:
+ *     summary: Get JD review for a given opening
+ *     tags:
+ *       - JD Reviews
+ *     parameters:
+ *       - name: opening_id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: JD review details or null
+ */
+
+/**
+ * @swagger
+ * /api/jd-reviews/{opening_id}:
+ *   post:
+ *     summary: Submit JD review feedback
+ *     tags:
+ *       - JD Reviews
+ *     parameters:
+ *       - name: opening_id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feedback:
+ *                 type: string
+ *               flags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               reviewer_name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: JD review created
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

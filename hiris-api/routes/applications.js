@@ -1,3 +1,109 @@
+/**
+ * @swagger
+ * /api/applications:
+ *   post:
+ *     summary: Submit a job application
+ *     tags:
+ *       - Applications
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               opening_id:
+ *                 type: string
+ *               full_name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               linkedin_url:
+ *                 type: string
+ *               github_url:
+ *                 type: string
+ *               cover_note:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               resume:
+ *                 type: string
+ *                 format: binary
+ *               cv:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Application submitted
+ */
+
+/**
+ * @swagger
+ * /api/applications/token/{token}:
+ *   get:
+ *     summary: Get application status by token
+ *     tags:
+ *       - Applications
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Application status page data
+ *       404:
+ *         description: Token not found
+ */
+
+/**
+ * @swagger
+ * /api/applications:
+ *   get:
+ *     summary: List applications
+ *     tags:
+ *       - Applications
+ *     parameters:
+ *       - name: opening_id
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter applications by opening
+ *     responses:
+ *       200:
+ *         description: List of applications
+ */
+
+/**
+ * @swagger
+ * /api/applications/{id}/status:
+ *   patch:
+ *     summary: Update application status
+ *     tags:
+ *       - Applications
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Status updated
+ */
+
 const router = require('express').Router()
 const db     = require('../db/pool')
 const upload = require('../middleware/upload')

@@ -1,3 +1,66 @@
+/**
+ * @swagger
+ * /api/chro/kpis:
+ *   get:
+ *     summary: Get CHRO dashboard KPIs
+ *     tags:
+ *       - CHRO
+ *     responses:
+ *       200:
+ *         description: CHRO KPI summary
+ */
+
+/**
+ * @swagger
+ * /api/chro/approvals:
+ *   get:
+ *     summary: Get pending approval requests
+ *     tags:
+ *       - CHRO
+ *     responses:
+ *       200:
+ *         description: Pending approval list
+ */
+
+/**
+ * @swagger
+ * /api/chro/department_pipeline:
+ *   get:
+ *     summary: Get department hiring pipeline data
+ *     tags:
+ *       - CHRO
+ *     responses:
+ *       200:
+ *         description: Department pipeline data
+ */
+
+/**
+ * @swagger
+ * /api/chro/headcount/{id}/status:
+ *   patch:
+ *     summary: Update headcount approval status
+ *     tags:
+ *       - CHRO
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Headcount status updated
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

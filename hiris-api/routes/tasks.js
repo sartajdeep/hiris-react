@@ -1,3 +1,77 @@
+/**
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     summary: List open tasks
+ *     tags:
+ *       - Tasks
+ *     responses:
+ *       200:
+ *         description: Task list
+ */
+
+/**
+ * @swagger
+ * /api/tasks:
+ *   post:
+ *     summary: Create a new task
+ *     tags:
+ *       - Tasks
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               text:
+ *                 type: string
+ *               priority:
+ *                 type: string
+ *               due_date:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Task created
+ */
+
+/**
+ * @swagger
+ * /api/tasks/{id}/complete:
+ *   patch:
+ *     summary: Mark task as complete
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task completed
+ */
+
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   delete:
+ *     summary: Delete a task
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task deleted
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

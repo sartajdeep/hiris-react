@@ -1,3 +1,79 @@
+/**
+ * @swagger
+ * /api/agenda:
+ *   get:
+ *     summary: List agenda events
+ *     description: Returns agenda events for the given date, defaulting to today.
+ *     tags:
+ *       - Agenda
+ *     parameters:
+ *       - name: date
+ *         in: query
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Event date filter
+ *     responses:
+ *       200:
+ *         description: Agenda event list
+ */
+
+/**
+ * @swagger
+ * /api/agenda:
+ *   post:
+ *     summary: Create an agenda event
+ *     tags:
+ *       - Agenda
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               subtitle:
+ *                 type: string
+ *               time_start:
+ *                 type: string
+ *               time_end:
+ *                 type: string
+ *               time_label:
+ *                 type: string
+ *               top_px:
+ *                 type: integer
+ *               height_px:
+ *                 type: integer
+ *               variant:
+ *                 type: string
+ *               event_date:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Agenda event created
+ */
+
+/**
+ * @swagger
+ * /api/agenda/{id}:
+ *   delete:
+ *     summary: Delete an agenda event
+ *     tags:
+ *       - Agenda
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Agenda event deleted
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

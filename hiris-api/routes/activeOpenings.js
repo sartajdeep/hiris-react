@@ -1,3 +1,119 @@
+/**
+ * @swagger
+ * /api/active-openings:
+ *   get:
+ *     summary: List active job openings
+ *     description: Retrieve open job postings with optional filtering by tag or status.
+ *     tags:
+ *       - Active Openings
+ *     parameters:
+ *       - name: tag
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter openings by tag
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter openings by status
+ *     responses:
+ *       200:
+ *         description: A list of open active openings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
+
+/**
+ * @swagger
+ * /api/active-openings/{id}:
+ *   get:
+ *     summary: Get a single active opening
+ *     tags:
+ *       - Active Openings
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Active opening details
+ *       404:
+ *         description: Not found
+ */
+
+/**
+ * @swagger
+ * /api/active-openings:
+ *   post:
+ *     summary: Create an active opening
+ *     tags:
+ *       - Active Openings
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               tag:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Created active opening
+ */
+
+/**
+ * @swagger
+ * /api/active-openings/{id}/close:
+ *   patch:
+ *     summary: Close an active opening
+ *     tags:
+ *       - Active Openings
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Opening closed
+ */
+
+/**
+ * @swagger
+ * /api/active-openings/{id}/candidate-count:
+ *   patch:
+ *     summary: Increment candidate count for an opening
+ *     tags:
+ *       - Active Openings
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Candidate count incremented
+ */
+
 const router = require('express').Router()
 const db = require('../db/pool')
 

@@ -2,6 +2,8 @@ require('dotenv').config()
 require('express-async-errors')
 const express = require('express')
 const cors    = require('cors')
+const swaggerJsdoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
 
 const app = express()
 app.use(cors({
@@ -15,6 +17,35 @@ app.use(cors({
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
+// Swagger definition
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'HIRIS API',
+    version: '1.0.0',
+    description: 'API for HIRIS Hiring and Recruitment Information System',
+  },
+  servers: [
+    {
+      url: 'http://localhost:3001',
+      description: 'Development server',
+    },
+  ],
+}
+
+// Options for the swagger docs
+const options = {
+  swaggerDefinition,
+  // Paths to files containing OpenAPI definitions
+  apis: ['./routes/*.js'],
+}
+
+// Initialize swagger-jsdoc
+const swaggerSpec = swaggerJsdoc(options)
+
+// Use swagger-ui-express for your app documentation endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
 app.use('/api/dashboard',        require('./routes/dashboard'))
 app.use('/api/hiring-requests',  require('./routes/hiringRequests'))
 app.use('/api/tasks',            require('./routes/tasks'))
@@ -26,8 +57,29 @@ app.use('/api/applications',     require('./routes/applications'))
 app.use('/api/departments',      require('./routes/departments'))
 app.use('/api/jd-reviews',       require('./routes/jdReviews'))
 app.use('/api/interview-sessions', require('./routes/interviewSessions'))
+app.use('/api/jobs',              require('./routes/jobs'))
 app.use('/api/chro',             require('./routes/chro'))
 
+/**
+ * @swagger
+ * /api/health:
+ *   get:
+ *     summary: Health check endpoint
+ *     description: Returns a simple status object to verify the API is running.
+ *     tags:
+ *       - System
+ *     responses:
+ *       200:
+ *         description: API is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ */
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 
 // Global error handler
