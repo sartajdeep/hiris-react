@@ -83,6 +83,105 @@ The following endpoints represent the AI-driven roadmap for HIRIS. These are cur
 
 ## 🗄️ Full Database Table Reference (PostgreSQL)
 
+### Detailed AI implementation plan
+
+The section above lists the original placeholder AI endpoints. The following implementation plan adds the requested candidate screening, AI chat, live CHRO interview support, pricing notes, and evaluation requirements.
+
+#### Planned AI workflow
+
+1. When a candidate fills the application form, AI evaluates the profile against the role, rubric, and required qualifications.
+2. After the candidate uploads the CV and resume, a brief AI chat takes place and the AI asks 2 follow-up questions based on the submitted documents.
+3. When the CHRO interview begins, the conversation is recorded and transcribed live.
+4. While the CHRO round is in progress, AI listens to the conversation, reads the uploaded rubric, and suggests relevant follow-up questions in real time.
+5. After the interview, AI produces a structured summary, rubric-aligned score signals, and recommended next steps for the hiring team.
+
+| Function | Method | Endpoint | Status | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **Application Evaluation** | `POST` | `/api/ai/evaluate-application` | `Planned` | Judge the applicant profile during form submission and return fit, risks, and missing information. |
+| **Resume/CV Analysis** | `POST` | `/api/ai/analyze-documents` | `Planned` | Parse CV/resume, extract candidate signals, and create structured summaries for downstream workflows. |
+| **Candidate AI Chat** | `POST` | `/api/ai/candidate-chat` | `Planned` | Start a brief AI conversation after CV/resume upload and generate exactly 2 targeted questions. |
+| **Interview Transcription** | `POST` | `/api/ai/interview-transcription/session` | `Planned` | Record and transcribe the CHRO interview in real time. |
+| **Interview Copilot** | `POST` | `/api/ai/interview-copilot/questions` | `Planned` | Listen to the ongoing CHRO interview, apply the uploaded rubric, and suggest follow-up questions. |
+| **Interview Evaluation** | `POST` | `/api/ai/interview-copilot/evaluate` | `Planned` | Generate a post-interview summary, rubric coverage, strengths, concerns, and recommendation. |
+
+#### Recommended OpenAI APIs
+
+HIRIS should use **OpenAI Responses API** for document understanding, structured screening, question generation, and post-interview evaluation. The Responses API is the best fit for text-plus-file workflows and structured JSON outputs.
+
+HIRIS should use **OpenAI Realtime API** for the live CHRO interview experience when audio is being recorded and transcribed as the conversation happens.
+
+| Use case | Recommended API | Suggested model | Why |
+| :--- | :--- | :--- | :--- |
+| Application scoring and structured profile judging | Responses API | `gpt-5.4-mini` | Strong quality/cost balance for repeated screening tasks. |
+| CV/resume analysis and structured extraction | Responses API | `gpt-5.4-mini` | Good document reasoning with lower cost. |
+| Candidate follow-up chat and 2-question generation | Responses API | `gpt-5.4-mini` | Fast and cost-efficient for short conversational turns. |
+| High-stakes final evaluation or escalation review | Responses API | `gpt-5.4` | Better for nuanced rubric-based reasoning when accuracy matters more than cost. |
+| Live CHRO interview transcription/listening | Realtime API | `gpt-realtime-1.5` | Designed for low-latency audio and real-time interactions. |
+
+#### Pricing snapshot
+
+Pricing changes over time, so the team should always verify it against the official OpenAI pricing page before go-live. As of **April 10, 2026**, the most relevant published prices are:
+
+| Model / API | Input price | Cached input | Output price | Intended use in HIRIS |
+| :--- | :--- | :--- | :--- | :--- |
+| `gpt-5.4` | `$2.50 / 1M tokens` | `$0.25 / 1M tokens` | `$15.00 / 1M tokens` | High-stakes scoring, final recommendation, escalation review. |
+| `gpt-5.4-mini` | `$0.75 / 1M tokens` | `$0.075 / 1M tokens` | `$4.50 / 1M tokens` | Application screening, resume analysis, AI chat, question generation. |
+| `gpt-realtime-1.5` text | `$4.00 / 1M tokens` | `$0.40 / 1M tokens` | `$16.00 / 1M tokens` | Live interview text stream and copilot reasoning. |
+| `gpt-realtime-1.5` audio | `$32.00 / 1M audio tokens` | `$0.40 / 1M audio tokens` | `$64.00 / 1M audio tokens` | Real-time CHRO interview audio ingestion/output. |
+
+Important pricing note:
+
+- The **Responses API itself is not priced separately**. Billing follows the selected model's token rates.
+- For offline bulk re-scoring or nightly backfills, **Batch API** can reduce model cost and is worth considering for evaluation pipelines.
+
+Official references:
+
+- `https://openai.com/api/pricing`
+- `https://platform.openai.com/docs/guides/realtime/overview`
+
+#### How AI will be used in HIRIS
+
+- **AI as a screening assistant**: evaluate applications while candidates are filling them in and produce structured fit signals instead of only free-text summaries.
+- **AI as a document analyst**: read resumes and CVs, normalize candidate information, and identify missing or weak signals.
+- **AI as a candidate interviewer**: ask 2 short follow-up questions immediately after document upload to clarify background, intent, or role fit.
+- **AI as a CHRO interview copilot**: listen to the live interview, compare the discussion against the uploaded rubric, and suggest the next best questions.
+- **AI as an evaluation layer**: summarize interviews, identify rubric coverage gaps, and help standardize decisions across interviewers.
+
+#### Evaluation benchmark required for every AI endpoint
+
+Every AI endpoint must have an evaluation benchmark before being considered production ready.
+
+For each endpoint, create:
+
+1. A benchmark dataset with sample input/output pairs.
+2. An LLM-as-a-judge evaluator that scores quality against the expected behavior.
+
+This is necessary because new models are released frequently. Evals must be rerun regularly so the team can swap models, compare versions, and maintain a reasonable quality of service.
+
+| Endpoint | Benchmark input | Expected output | Judge criteria |
+| :--- | :--- | :--- | :--- |
+| `/api/ai/evaluate-application` | Application form, role details, rubric | Structured fit score, strengths, concerns, missing info | Accuracy, fairness, rubric alignment, hallucination rate |
+| `/api/ai/analyze-documents` | CV, resume, job context | Extracted facts, summary, candidate signals | Extraction accuracy, completeness, schema validity |
+| `/api/ai/candidate-chat` | CV/resume plus candidate context | Exactly 2 relevant follow-up questions | Relevance, specificity, non-redundancy, tone |
+| `/api/ai/interview-transcription/session` | Interview audio | Timestamped transcript | Word accuracy, speaker separation, latency |
+| `/api/ai/interview-copilot/questions` | Live transcript window plus rubric | Suggested next questions | Rubric coverage, contextual relevance, timing usefulness |
+| `/api/ai/interview-copilot/evaluate` | Full transcript plus rubric | Summary, score signals, recommendation | Evidence grounding, consistency, decision usefulness |
+
+Minimum benchmark structure for each endpoint:
+
+- `sample_inputs.jsonl`: real or synthetic representative requests
+- `expected_outputs.jsonl`: gold or reference answers
+- `judge_prompt.md`: rubric used by the evaluator model
+- `eval_runner`: script/job that compares model versions and stores scores
+- `release_gate`: minimum score threshold required before model upgrades are accepted
+
+Recommended operating rule:
+
+- Run evals whenever prompts change.
+- Run evals whenever a model is upgraded.
+- Run evals on a schedule every few days so QoS does not drift as newer models become available.
+- Track cost, latency, schema-validity rate, and human-override rate in addition to judge score.
+
 This section includes the full table reference from `hiris-api/DB_TABLES.md` and documents the PostgreSQL schema used by the backend.
 
 ## departments
