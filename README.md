@@ -1,15 +1,16 @@
 # HIRIS — Hiring and Recruitment Information System
 
-HIRIS is an integrated platform designed to streamline academic and staff recruitment. It features specialized dashboards for various organizational personas and a centralized intelligent backend.
+HIRIS is an integrated platform designed to streamline academic and staff recruitment processes.
+It provides specialized dashboards tailored to different organizational roles and is supported by a centralized intelligent backend that manages data, workflows, and decision-making efficiently.
 
-## 🚀 Getting Started
+##  Getting Started
 
 To launch the entire HIRIS ecosystem including the API and all three dashboard portals, use the provided batch script:
 
 1. Open a terminal in the project root.
 2. Run `start_all.bat`.
 
-### 📍 Access Points
+### Access Points
 - **Hiring Assistant**: [http://localhost:5173](http://localhost:5173)
 - **Professor Dashboard**: [http://localhost:5174](http://localhost:5174)
 - **CHRO Insights**: [http://localhost:5175](http://localhost:5175)
@@ -17,7 +18,7 @@ To launch the entire HIRIS ecosystem including the API and all three dashboard p
 
 ---
 
-## 👨‍🏫 Professor Persona (Faculty Portal)
+##  Professor Persona (Faculty Portal)
 
 | Function | Method | Endpoint | Verified | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
@@ -35,7 +36,7 @@ To launch the entire HIRIS ecosystem including the API and all three dashboard p
 
 ---
 
-## 👑 CHRO Persona (Executive Portal)
+##  CHRO Persona (Executive Portal)
 
 | Function | Method | Endpoint | Verified | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
@@ -50,7 +51,7 @@ To launch the entire HIRIS ecosystem including the API and all three dashboard p
 
 ---
 
-## 💼 Hiring Assistant Persona (Operations Portal)
+##  Hiring Assistant Persona (Operations Portal)
 
 | Function | Method | Endpoint | Verified | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
@@ -68,7 +69,7 @@ To launch the entire HIRIS ecosystem including the API and all three dashboard p
 
 ---
 
-## 🔮 AI & Intelligent Services (Planned / Not Implemented)
+##  AI & Intelligent Services (Planned / Not Implemented)
 
 The following endpoints represent the AI-driven roadmap for HIRIS. These are currently **Not Implemented** in the core API but are reserved for future integration.
 
@@ -81,7 +82,7 @@ The following endpoints represent the AI-driven roadmap for HIRIS. These are cur
 
 ---
 
-## 🗄️ Full Database Table Reference (PostgreSQL)
+##  Full Database Table Reference (PostgreSQL)
 
 ### Detailed AI implementation plan
 
