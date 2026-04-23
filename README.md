@@ -1,666 +1,389 @@
-# HIRIS — Hiring and Recruitment Information System
+# HIRIS — Hiring & Recruitment Information System
 
-HIRIS is an integrated platform designed to streamline academic and staff recruitment processes.
-It provides specialized dashboards tailored to different organizational roles and is supported by a centralized intelligent backend that manages data, workflows, and decision-making efficiently.
-
-##  Getting Started
-
-To launch the entire HIRIS ecosystem including the API and all three dashboard portals, use the provided batch script:
-
-1. Open a terminal in the project root.
-2. Run `start_all.bat`.
-
-### Access Points
-- **Hiring Assistant**: [http://localhost:5173](http://localhost:5173)
-- **Professor Dashboard**: [http://localhost:5174](http://localhost:5174)
-- **CHRO Insights**: [http://localhost:5175](http://localhost:5175)
-- **API Server**: [http://localhost:3001](http://localhost:3001)
+> A full-stack AI-assisted hiring platform connecting **Candidates**, **Hiring Managers**, **Professors/Evaluators**, and the **CHRO** through a unified recruitment workflow.
 
 ---
 
-##  Professor Persona (Faculty Portal)
+## Table of Contents
 
-| Function | Method | Endpoint | Verified | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **Dashboard** | `GET` | `/api/candidates` | ✅ | List candidates for professor review. |
-| | `GET` | `/api/candidates/:id` | ✅ | Fetch detailed candidate profile. |
-| | `PATCH` | `/api/candidates/:id/status` | ✅ | Update status / schedule interviews. |
-| | `GET` | `/api/hiring-requests` | ✅ | Track departmental requisitions. |
-| | `POST` | `/api/hiring-requests` | ✅ | Initiate a new hire request. |
-| | `PATCH` | `/api/hiring-requests/:id/status`| ✅ | Finalize request for approval. |
-| | `PATCH` | `/api/hiring-requests/:id` | ✅ | Modify request details. |
-| **JD Review** | `GET` | `/api/jd-reviews/:opening_id` | ✅ | View JD feedback history. |
-| | `POST` | `/api/jd-reviews/:opening_id` | ✅ | Submit feedback on JD drafts. |
-| **Interview** | `POST` | `/api/interview-sessions` | ✅ | Submit scores and transcripts. |
-| | `GET` | `/api/interview-sessions/:cand_id`| ✅ | Fetch candidate interview history. |
-
----
-
-##  CHRO Persona (Executive Portal)
-
-| Function | Method | Endpoint | Verified | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **Dashboard** | `GET` | `/api/chro/kpis` | ✅ | Executive high-level metrics. |
-| | `GET` | `/api/chro/approvals` | ✅ | Pending requisitions awaiting sign-off. |
-| | `GET` | `/api/chro/department_pipeline`| ✅ | Pipeline health by academic unit. |
-| | `PATCH` | `/api/chro/headcount/:id/status`| ✅ | Approve/Reject headcount requests. |
-| **Job Roles** | `GET` | `/api/jobs` | ✅ | Organizational role audit. |
-| | `POST` | `/api/jobs` | ✅ | Create new job roles. |
-| | `PATCH` | `/api/jobs/:id` | ✅ | Update role entities. |
-| | `DELETE`| `/api/jobs/:id` | ✅ | Remove obsolete roles. |
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Directory Structure](#directory-structure)
+- [Portals & Features](#portals--features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Database Setup](#database-setup)
+- [Environment Variables](#environment-variables)
+- [Running the Project](#running-the-project)
+- [API Reference](#api-reference)
+- [Port Map](#port-map)
+- [User Flow](#user-flow)
 
 ---
 
-##  Hiring Assistant Persona (Operations Portal)
+## Overview
 
-| Function | Method | Endpoint | Verified | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **Dashboard** | `GET` | `/api/dashboard/stats` | ✅ | Operational metrics and KPIs. |
-| | `GET` | `/api/tasks` | ✅ | List to-do items. |
-| | `POST` | `/api/tasks` | ✅ | Create new task. |
-| | `PATCH` | `/api/tasks/:id/complete` | ✅ | Archive completed tasks. |
-| | `GET` | `/api/agenda` | ✅ | Synchronized calendar events. |
-| **Admissions** | `GET` | `/api/admissions` | ✅ | Track applicants through screening. |
-| | `GET` | `/api/admissions/stats` | ✅ | Conversion rates by opening. |
-| | `PATCH` | `/api/admissions/:id/stage` | ✅ | Move candidate across pipeline stages. |
-| **Openings** | `GET` | `/api/active-openings` | ✅ | List all live postings. |
-| | `PATCH` | `/api/active-openings/:id/close`| ✅ | Deactivate application link. |
-| | `PATCH` | `/api/active-openings/:id/candidate-count`| ✅ | Metric sync for new applicants. |
+HIRIS is a multi-portal hiring platform that digitises and AI-assists every stage of the recruitment lifecycle — from job creation and candidate application, through AI-powered interviews, to final CHRO review and offer.
+
+The system is split into **three React frontends** and **one shared Express + PostgreSQL backend API**, all living in a single monorepo.
 
 ---
 
-##  AI & Intelligent Services (Planned / Not Implemented)
+## Architecture
 
-The following endpoints represent the AI-driven roadmap for HIRIS. These are currently **Not Implemented** in the core API but are reserved for future integration.
-
-| Function | Method | Endpoint | Status | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **JD Auto-Gen** | `POST` | `/api/ai/generate-jd` | ❌ | Automatically generate JD text from hiring request data. |
-| **Resume Parser**| `POST` | `/api/ai/analyze-resume`| ❌ | AI parsing of PDF resumes into candidate profile fields. |
-| **Talent Matching**| `GET` | `/api/ai/match-score/:id` | ❌ | Calculate candidate-role match percentage using LLMs. |
-| **Interview AI** | `POST` | `/api/ai/summarize` | ❌ | Post-interview transcript summarization and sentiment analysis. |
-
----
-
-##  Full Database Table Reference (PostgreSQL)
-
-### Detailed AI implementation plan
-
-The section above lists the original placeholder AI endpoints. The following implementation plan adds the requested candidate screening, AI chat, live CHRO interview support, pricing notes, and evaluation requirements.
-
-#### Planned AI workflow
-
-1. When a candidate fills the application form, AI evaluates the profile against the role, rubric, and required qualifications.
-2. After the candidate uploads the CV and resume, a brief AI chat takes place and the AI asks 2 follow-up questions based on the submitted documents.
-3. When the CHRO interview begins, the conversation is recorded and transcribed live.
-4. While the CHRO round is in progress, AI listens to the conversation, reads the uploaded rubric, and suggests relevant follow-up questions in real time.
-5. After the interview, AI produces a structured summary, rubric-aligned score signals, and recommended next steps for the hiring team.
-
-| Function | Method | Endpoint | Status | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **Application Evaluation** | `POST` | `/api/ai/evaluate-application` | `Planned` | Judge the applicant profile during form submission and return fit, risks, and missing information. |
-| **Resume/CV Analysis** | `POST` | `/api/ai/analyze-documents` | `Planned` | Parse CV/resume, extract candidate signals, and create structured summaries for downstream workflows. |
-| **Candidate AI Chat** | `POST` | `/api/ai/candidate-chat` | `Planned` | Start a brief AI conversation after CV/resume upload and generate exactly 2 targeted questions. |
-| **Interview Transcription** | `POST` | `/api/ai/interview-transcription/session` | `Planned` | Record and transcribe the CHRO interview in real time. |
-| **Interview Copilot** | `POST` | `/api/ai/interview-copilot/questions` | `Planned` | Listen to the ongoing CHRO interview, apply the uploaded rubric, and suggest follow-up questions. |
-| **Interview Evaluation** | `POST` | `/api/ai/interview-copilot/evaluate` | `Planned` | Generate a post-interview summary, rubric coverage, strengths, concerns, and recommendation. |
-
-#### Recommended OpenAI APIs
-
-HIRIS should use **OpenAI Responses API** for document understanding, structured screening, question generation, and post-interview evaluation. The Responses API is the best fit for text-plus-file workflows and structured JSON outputs.
-
-HIRIS should use **OpenAI Realtime API** for the live CHRO interview experience when audio is being recorded and transcribed as the conversation happens.
-
-| Use case | Recommended API | Suggested model | Why |
-| :--- | :--- | :--- | :--- |
-| Application scoring and structured profile judging | Responses API | `gpt-5.4-mini` | Strong quality/cost balance for repeated screening tasks. |
-| CV/resume analysis and structured extraction | Responses API | `gpt-5.4-mini` | Good document reasoning with lower cost. |
-| Candidate follow-up chat and 2-question generation | Responses API | `gpt-5.4-mini` | Fast and cost-efficient for short conversational turns. |
-| High-stakes final evaluation or escalation review | Responses API | `gpt-5.4` | Better for nuanced rubric-based reasoning when accuracy matters more than cost. |
-| Live CHRO interview transcription/listening | Realtime API | `gpt-realtime-1.5` | Designed for low-latency audio and real-time interactions. |
-
-#### Pricing snapshot
-
-Pricing changes over time, so the team should always verify it against the official OpenAI pricing page before go-live. As of **April 10, 2026**, the most relevant published prices are:
-
-| Model / API | Input price | Cached input | Output price | Intended use in HIRIS |
-| :--- | :--- | :--- | :--- | :--- |
-| `gpt-5.4` | `$2.50 / 1M tokens` | `$0.25 / 1M tokens` | `$15.00 / 1M tokens` | High-stakes scoring, final recommendation, escalation review. |
-| `gpt-5.4-mini` | `$0.75 / 1M tokens` | `$0.075 / 1M tokens` | `$4.50 / 1M tokens` | Application screening, resume analysis, AI chat, question generation. |
-| `gpt-realtime-1.5` text | `$4.00 / 1M tokens` | `$0.40 / 1M tokens` | `$16.00 / 1M tokens` | Live interview text stream and copilot reasoning. |
-| `gpt-realtime-1.5` audio | `$32.00 / 1M audio tokens` | `$0.40 / 1M audio tokens` | `$64.00 / 1M audio tokens` | Real-time CHRO interview audio ingestion/output. |
-
-Important pricing note:
-
-- The **Responses API itself is not priced separately**. Billing follows the selected model's token rates.
-- For offline bulk re-scoring or nightly backfills, **Batch API** can reduce model cost and is worth considering for evaluation pipelines.
-
-Official references:
-
-- `https://openai.com/api/pricing`
-- `https://platform.openai.com/docs/guides/realtime/overview`
-
-#### How AI will be used in HIRIS
-
-- **AI as a screening assistant**: evaluate applications while candidates are filling them in and produce structured fit signals instead of only free-text summaries.
-- **AI as a document analyst**: read resumes and CVs, normalize candidate information, and identify missing or weak signals.
-- **AI as a candidate interviewer**: ask 2 short follow-up questions immediately after document upload to clarify background, intent, or role fit.
-- **AI as a CHRO interview copilot**: listen to the live interview, compare the discussion against the uploaded rubric, and suggest the next best questions.
-- **AI as an evaluation layer**: summarize interviews, identify rubric coverage gaps, and help standardize decisions across interviewers.
-
-#### Evaluation benchmark required for every AI endpoint
-
-Every AI endpoint must have an evaluation benchmark before being considered production ready.
-
-For each endpoint, create:
-
-1. A benchmark dataset with sample input/output pairs.
-2. An LLM-as-a-judge evaluator that scores quality against the expected behavior.
-
-This is necessary because new models are released frequently. Evals must be rerun regularly so the team can swap models, compare versions, and maintain a reasonable quality of service.
-
-| Endpoint | Benchmark input | Expected output | Judge criteria |
-| :--- | :--- | :--- | :--- |
-| `/api/ai/evaluate-application` | Application form, role details, rubric | Structured fit score, strengths, concerns, missing info | Accuracy, fairness, rubric alignment, hallucination rate |
-| `/api/ai/analyze-documents` | CV, resume, job context | Extracted facts, summary, candidate signals | Extraction accuracy, completeness, schema validity |
-| `/api/ai/candidate-chat` | CV/resume plus candidate context | Exactly 2 relevant follow-up questions | Relevance, specificity, non-redundancy, tone |
-| `/api/ai/interview-transcription/session` | Interview audio | Timestamped transcript | Word accuracy, speaker separation, latency |
-| `/api/ai/interview-copilot/questions` | Live transcript window plus rubric | Suggested next questions | Rubric coverage, contextual relevance, timing usefulness |
-| `/api/ai/interview-copilot/evaluate` | Full transcript plus rubric | Summary, score signals, recommendation | Evidence grounding, consistency, decision usefulness |
-
-Minimum benchmark structure for each endpoint:
-
-- `sample_inputs.jsonl`: real or synthetic representative requests
-- `expected_outputs.jsonl`: gold or reference answers
-- `judge_prompt.md`: rubric used by the evaluator model
-- `eval_runner`: script/job that compares model versions and stores scores
-- `release_gate`: minimum score threshold required before model upgrades are accepted
-
-Recommended operating rule:
-
-- Run evals whenever prompts change.
-- Run evals whenever a model is upgraded.
-- Run evals on a schedule every few days so QoS does not drift as newer models become available.
-- Track cost, latency, schema-validity rate, and human-override rate in addition to judge score.
-
-This section includes the full table reference from `hiris-api/DB_TABLES.md` and documents the PostgreSQL schema used by the backend.
-
-## departments
-Lookup table for academic or administrative departments.
-
-```sql
-Table: departments
-+------------+--------+-------------------------------------------+
-| Column     | Type   | Notes                                     |
-+------------+--------+-------------------------------------------+
-| id         | TEXT   | Primary key (e.g. CS-01)                  |
-| name       | TEXT   | Department name                           |
-+------------+--------+-------------------------------------------+
+```
+                    ┌─────────────────────────────────┐
+                    │         HIRIS Monorepo           │
+                    └─────────────────────────────────┘
+                                    │
+           ┌────────────────────────┼────────────────────────┐
+           │                        │                        │
+   ┌───────▼───────┐      ┌─────────▼──────┐      ┌────────▼────────┐
+   │  Hiring Asst  │      │  CHRO Portal   │      │Professor Portal │
+   │  + Candidate  │      │  (React/Vite)  │      │  (React/Vite)   │
+   │  (React/Vite) │      │  :5175         │      │  :5174          │
+   │  :5173        │      └───────┬────────┘      └────────┬────────┘
+   └───────┬───────┘              │                        │
+           │                      │                        │
+           └──────────────────────┼────────────────────────┘
+                                  │  REST API calls
+                          ┌───────▼───────┐
+                          │  Express API  │
+                          │  (Node.js)    │
+                          │  :3001        │
+                          └───────┬───────┘
+                                  │
+                          ┌───────▼───────┐
+                          │  PostgreSQL   │
+                          │  Database     │
+                          └───────────────┘
 ```
 
 ---
 
-## professors
-Stores professor records who request hires and review JDs/interviews.
+## Directory Structure
 
-```sql
-Table: professors
-+----------------+-------------+-------------------------------------------+
-| Column         | Type        | Notes                                     |
-+----------------+-------------+-------------------------------------------+
-| id             | TEXT        | Primary key                               |
-| name           | TEXT        | Professor name                            |
-| email          | TEXT        | Unique professor email                    |
-| title          | TEXT        | Job title                                 |
-| department     | TEXT        | References departments(id)                |
-| phone          | TEXT        | Contact phone                             |
-| linkedin_url   | TEXT        | LinkedIn URL                              |
-| github_url     | TEXT        | GitHub URL                                |
-| profile_notes  | TEXT        | Notes about the professor                 |
-| created_at     | TIMESTAMPTZ | Record creation timestamp                 |
-+----------------+-------------+-------------------------------------------+
+```
+hiris-react/
+│
+├── frontend/
+│   ├── hiring-assistant/          # Hiring Manager + Candidate Portal
+│   │   ├── src/
+│   │   │   ├── api/               # API client (axios wrapper)
+│   │   │   ├── components/
+│   │   │   │   ├── layout/        # Header, Footer, Breadcrumb
+│   │   │   │   ├── dashboard/     # Task, Agenda widgets
+│   │   │   │   └── hiring/        # Kanban, RequestCard
+│   │   │   ├── data/              # Static/mock data files
+│   │   │   ├── hooks/             # useLiveClock, useTasks
+│   │   │   ├── pages/
+│   │   │   │   ├── hiringassistant/  # 11 hiring manager screens
+│   │   │   │   └── candidateapplicationform/  # 3 candidate screens
+│   │   │   ├── App.jsx
+│   │   │   └── main.jsx
+│   │   ├── index.html
+│   │   ├── vite.config.js
+│   │   ├── tailwind.config.js
+│   │   └── package.json
+│   │
+│   ├── chro/                      # CHRO (Chief HR Officer) Portal
+│   │   ├── src/
+│   │   │   ├── api/
+│   │   │   ├── assets/
+│   │   │   ├── components/
+│   │   │   │   ├── Layout.jsx     # Sidebar + header shell
+│   │   │   │   └── ToastContext.jsx
+│   │   │   ├── pages/chro/        # 8 CHRO screens
+│   │   │   │   ├── CHRODashboard.jsx
+│   │   │   │   ├── InterviewRoomCHRO.jsx  # AI interview room
+│   │   │   │   ├── HiringRequests.jsx
+│   │   │   │   ├── HiringPolicies.jsx
+│   │   │   │   ├── JobRoles.jsx
+│   │   │   │   ├── AssignManagers.jsx
+│   │   │   │   ├── Analytics.jsx
+│   │   │   │   └── Settings.jsx
+│   │   │   ├── App.jsx
+│   │   │   └── main.jsx
+│   │   ├── index.html
+│   │   ├── vite.config.js
+│   │   └── package.json
+│   │
+│   └── professor/                 # Professor / Evaluator Portal
+│       ├── src/
+│       │   ├── api/
+│       │   ├── components/layout/
+│       │   ├── hooks/
+│       │   ├── pages/professor/   # 4 professor screens
+│       │   │   ├── ProfessorDashboard.jsx
+│       │   │   ├── ProfessorCandidateProfile.jsx
+│       │   │   ├── ProfessorJDReview.jsx
+│       │   │   └── ProfessorInterviewRoom.jsx
+│       │   ├── App.jsx
+│       │   └── main.jsx
+│       ├── index.html
+│       ├── vite.config.js
+│       └── package.json
+│
+├── backend/                       # Express + PostgreSQL REST API
+│   ├── db/
+│   │   ├── pool.js                # PostgreSQL connection pool
+│   │   ├── schema.sql             # Full table definitions
+│   │   └── seed.js                # Sample data seeding
+│   ├── middleware/
+│   │   └── upload.js              # Multer file upload config
+│   ├── routes/
+│   │   ├── dashboard.js
+│   │   ├── hiringRequests.js
+│   │   ├── tasks.js
+│   │   ├── agenda.js
+│   │   ├── activeOpenings.js
+│   │   ├── candidates.js
+│   │   ├── admissions.js
+│   │   ├── applications.js
+│   │   ├── departments.js
+│   │   ├── jdReviews.js
+│   │   ├── interviewSessions.js
+│   │   ├── jobs.js
+│   │   └── chro.js
+│   ├── server.js                  # Express app entry point
+│   ├── .env                       # DB credentials (git-ignored)
+│   └── package.json
+│
+├── start_all.sh                   # One-command dev startup script
+└── README.md
 ```
 
 ---
 
-## hiring_managers
-Stores hiring manager and HR reviewer records.
+## Portals & Features
 
-```sql
-Table: hiring_managers
-+-------------+-------------+-------------------------------------------+
-| Column      | Type        | Notes                                     |
-+-------------+-------------+-------------------------------------------+
-| id          | TEXT        | Primary key                               |
-| name        | TEXT        | Hiring manager name                       |
-| email       | TEXT        | Unique email                              |
-| title       | TEXT        | Job title                                 |
-| department  | TEXT        | References departments(id)                |
-| phone       | TEXT        | Contact phone                             |
-| created_at  | TIMESTAMPTZ | Creation timestamp                        |
-+-------------+-------------+-------------------------------------------+
+### 1. Hiring Assistant (`frontend/hiring-assistant/`) — Port 5173
+Used by **Hiring Managers** to manage the full recruitment pipeline.
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/` | Overview with tasks, agenda, KPIs |
+| Hiring Requests | `/hiring-requests` | View/manage open requests |
+| Job Posting Builder | `/job-posting-builder` | Create a job description |
+| Publish | `/publish` | Review & publish the JD |
+| Job Posted | `/job-posted` | Confirmation screen |
+| Active Openings | `/active-openings` | Browse live postings |
+| Admissions | `/admissions` | Manage incoming applications |
+| Admissions Edit | `/admissions/edit` | Edit an existing posting |
+| Application Details | `/application-details` | Deep-dive one application |
+| Candidate Profile | `/candidate-profile` | Full candidate profile |
+| Approval Submitted | `/approval-submitted` | Post-approval confirmation |
+
+**Candidate-facing screens** (embedded in same app):
+
+| Screen | Route | Description |
+|---|---|---|
+| Application Form | `/application-form` | Multi-step job application |
+| AI Chat | `/ai-chat` | AI assistant during application |
+| Thank You | `/thank-you` | Post-submission confirmation |
+
+---
+
+### 2. CHRO Portal (`frontend/chro/`) — Port 5175
+Used by the **Chief Human Resources Officer** for executive oversight.
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/` | Company-wide hiring overview |
+| Interview Room | `/chro/interview-room/:candidateId` | AI-powered live interview |
+| Hiring Requests | `/chro/requests` | Review all requests |
+| Hiring Policies | `/chro/policies` | Manage HR policies |
+| Job Roles | `/chro/job-roles` | Browse/manage roles |
+| Assign Managers | `/chro/assign-managers` | Assign HMs to roles |
+| Analytics | `/chro/analytics` | Hiring analytics & charts |
+| Settings | `/chro/settings` | Account & system config |
+
+---
+
+### 3. Professor Portal (`frontend/professor/`) — Port 5174
+Used by **academic evaluators** to assess candidates and review JDs.
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/` | Candidate queue overview |
+| JD Review | `/jd-review` | Review job descriptions |
+| JD Review (role) | `/jd-review/:roleId` | Role-specific JD review |
+| Interview Room | `/interview/:roleId` | Conduct an interview |
+| Candidate Profile | `/candidate/:id` | Deep candidate assessment |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend Framework | React 18/19 + Vite |
+| Routing | React Router v6/v7 |
+| Styling | TailwindCSS + Vanilla CSS |
+| UI Icons | Lucide React |
+| Backend | Node.js + Express 4 |
+| Database | PostgreSQL (via `pg` pool) |
+| File Uploads | Multer |
+| API Docs | Swagger UI (`/api-docs`) |
+| Dev Server | Nodemon (backend) / Vite HMR (frontend) |
+
+---
+
+## Prerequisites
+
+- **Node.js** v18+ and **npm** v9+
+- **PostgreSQL** v14+ running locally
+- **Git**
+
+---
+
+## Database Setup
+
+1. Create a PostgreSQL database named `hiris`:
+   ```sql
+   CREATE DATABASE hiris;
+   ```
+
+2. Apply the schema:
+   ```bash
+   psql -U postgres -d hiris -f backend/db/schema.sql
+   ```
+
+3. (Optional) Seed with sample data:
+   ```bash
+   cd backend && npm run seed
+   ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file inside `backend/` (already present from migration):
+
+```env
+# backend/.env
+DATABASE_URL=postgresql://<user>:<password>@localhost:5432/hiris
+PORT=3001
+FRONTEND_URL=http://localhost:5173
+```
+
+> **Never commit `.env` to version control.** It is already listed in `.gitignore`.
+
+---
+
+## Running the Project
+
+### Option A — One Command (recommended)
+
+```bash
+# From repo root
+bash start_all.sh
+```
+
+This script will:
+1. Auto-run `npm install` in any directory missing `node_modules`
+2. Start all 4 services concurrently in the background
+3. Print all URLs
+4. Gracefully stop everything with `Ctrl+C`
+
+---
+
+### Option B — Manual (run each in a separate terminal)
+
+```bash
+# Terminal 1 — Backend API
+cd backend
+npm install
+npm run dev
+
+# Terminal 2 — Hiring Assistant + Candidate Portal
+cd frontend/hiring-assistant
+npm install
+npm run dev
+
+# Terminal 3 — Professor Portal
+cd frontend/professor
+npm install
+npm run dev
+
+# Terminal 4 — CHRO Portal
+cd frontend/chro
+npm install
+npm run dev
 ```
 
 ---
 
-## hiring_policies
-Contains configured hiring policies, feature flags, and policy details.
+## API Reference
 
-```sql
-Table: hiring_policies
-+-------------+-------------+-------------------------------------------+
-| Column      | Type        | Notes                                     |
-+-------------+-------------+-------------------------------------------+
-| id          | SERIAL      | Primary key                               |
-| policy_key  | TEXT        | Unique policy identifier                  |
-| title       | TEXT        | Policy title                              |
-| description | TEXT        | Policy description                        |
-| active      | BOOLEAN     | Policy active state                       |
-| features    | JSONB       | Feature list/details                      |
-| created_at  | TIMESTAMPTZ | Creation timestamp                        |
-+-------------+-------------+-------------------------------------------+
+All API endpoints are served from `http://localhost:3001`.  
+Interactive Swagger docs: **http://localhost:3001/api-docs**
+
+| Base Path | Route File | Description |
+|---|---|---|
+| `GET /api/health` | inline | Health check |
+| `/api/dashboard` | `dashboard.js` | Dashboard stats |
+| `/api/hiring-requests` | `hiringRequests.js` | Create/approve/reject requests |
+| `/api/tasks` | `tasks.js` | Task management |
+| `/api/agenda` | `agenda.js` | Interview agenda events |
+| `/api/active-openings` | `activeOpenings.js` | Live job listings |
+| `/api/candidates` | `candidates.js` | Candidate records |
+| `/api/admissions` | `admissions.js` | Application tracking |
+| `/api/applications` | `applications.js` | Application submissions |
+| `/api/departments` | `departments.js` | Department data |
+| `/api/jd-reviews` | `jdReviews.js` | JD review workflow |
+| `/api/interview-sessions` | `interviewSessions.js` | Interview session data |
+| `/api/jobs` | `jobs.js` | Job postings CRUD |
+| `/api/chro` | `chro.js` | CHRO-specific operations |
+
+---
+
+## Port Map
+
+| Service | URL |
+|---|---|
+| Backend API | http://localhost:3001 |
+| API Docs (Swagger) | http://localhost:3001/api-docs |
+| Hiring Assistant + Candidate Portal | http://localhost:5173 |
+| Professor / Evaluator Portal | http://localhost:5174 |
+| CHRO Portal | http://localhost:5175 |
+
+---
+
+## User Flow
+
+```
+CANDIDATE
+  └─► /application-form  →  /ai-chat  →  /thank-you
+                                              │
+                                    (application submitted)
+                                              │
+HIRING MANAGER                                ▼
+  └─► /admissions  →  /application-details  →  /candidate-profile
+                                              │
+                                     (request approved)
+                                              │
+CHRO                                          ▼
+  └─► /chro/requests  →  /chro/interview-room/:candidateId
+                                              │
+                                     (final evaluation)
+                                              │
+PROFESSOR                                     ▼
+  └─► /jd-review/:roleId  →  /interview/:roleId  →  /candidate/:id
 ```
 
 ---
 
-## pipelines
-Defines pipeline stages used across hiring workflows.
+## Contributing
 
-```sql
-Table: pipelines
-+-------------+---------+-------------------------------------------+
-| Column      | Type    | Notes                                     |
-+-------------+---------+-------------------------------------------+
-| id          | SERIAL  | Primary key                               |
-| name        | TEXT    | Unique stage name                         |
-| description | TEXT    | Stage description                         |
-| ordinal     | INT     | Stage order                               |
-+-------------+---------+-------------------------------------------+
-```
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Commit your changes: `git commit -m 'feat: add your feature'`
+4. Push to the branch: `git push origin feat/your-feature`
+5. Open a Pull Request
 
 ---
 
-## hiring_requests
-Kanban-style hiring request tracker from professor through approval.
+## License
 
-```sql
-Table: hiring_requests
-+---------------------+-------------+-------------------------------------------+
-| Column              | Type        | Notes                                     |
-+---------------------+-------------+-------------------------------------------+
-| id                  | TEXT        | Primary key                               |
-| request_uid         | TEXT        | Unique UUID for the request               |
-| status              | TEXT        | Request status                            |
-| title               | TEXT        | Request title                             |
-| description         | TEXT        | Request description                       |
-| location            | TEXT        | Job location                              |
-| requested_by        | TEXT        | Originating user                          |
-| professor_id        | TEXT        | References professors(id)                 |
-| hiring_manager_id   | TEXT        | References hiring_managers(id)            |
-| department          | TEXT        | Department name                           |
-| job_type            | TEXT        | Job type                                  |
-| positions           | INT         | Number of openings                        |
-| start_date          | TEXT        | Start date                                |
-| deadline            | DATE        | Application deadline                      |
-| pipeline_stage      | TEXT        | Workflow stage                            |
-| created_at          | TIMESTAMPTZ | Creation timestamp                        |
-+---------------------+-------------+-------------------------------------------+
-```
-
----
-
-## active_openings
-Tracks active job postings and associated opening details.
-
-```sql
-Table: active_openings
-+-------------+-------------+-------------------------------------------+
-| Column      | Type        | Notes                                     |
-+-------------+-------------+-------------------------------------------+
-| id          | TEXT        | Primary key                               |
-| title       | TEXT        | Opening title                             |
-| tag         | TEXT        | Job tag/category                          |
-| department  | TEXT        | Department name                           |
-| request_id  | TEXT        | References hiring_requests(id)            |
-| role_uid    | TEXT        | Unique role identifier                    |
-| candidates  | INT         | Count of candidates                       |
-| status      | TEXT        | Opening status                            |
-| deadline    | TEXT        | Deadline label/text                       |
-| is_open     | BOOLEAN     | Open/closed flag                          |
-| created_at  | TIMESTAMPTZ | Creation timestamp                        |
-+-------------+-------------+-------------------------------------------+
-```
-
----
-
-## tasks
-Tracks dashboard to-dos and hiring assistant tasks.
-
-```sql
-Table: tasks
-+------------+-------------+-------------------------------------------+
-| Column     | Type        | Notes                                     |
-+------------+-------------+-------------------------------------------+
-| id         | SERIAL      | Primary key                               |
-| text       | TEXT        | Task description                          |
-| priority   | TEXT        | High / Medium / Low                       |
-| due_date   | DATE        | Due date                                  |
-| completed  | BOOLEAN     | Completion flag                           |
-| created_at | TIMESTAMPTZ | Creation timestamp                        |
-+------------+-------------+-------------------------------------------+
-```
-
----
-
-## agenda_events
-Stores scheduled agenda cards for dashboard timeline.
-
-```sql
-Table: agenda_events
-+--------------+-------------+-------------------------------------------+
-| Column       | Type        | Notes                                     |
-+--------------+-------------+-------------------------------------------+
-| id           | SERIAL      | Primary key                               |
-| title        | TEXT        | Event title                               |
-| subtitle     | TEXT        | Event subtitle                            |
-| time_start   | TEXT        | Start time                                |
-| time_end     | TEXT        | End time                                  |
-| time_label   | TEXT        | Display label                             |
-| top_px       | INT         | UI top position                           |
-| height_px    | INT         | UI height                                 |
-| variant      | TEXT        | Visual variant                            |
-| event_date   | DATE        | Event date                                |
-+--------------+-------------+-------------------------------------------+
-```
-
----
-
-## candidates
-Stores candidate metadata for the hiring cycle.
-
-```sql
-Table: candidates
-+----------------------+-------------+-------------------------------------------+
-| Column               | Type        | Notes                                     |
-+----------------------+-------------+-------------------------------------------+
-| id                   | SERIAL      | Primary key                               |
-| candidate_uid        | TEXT        | Unique candidate UUID                     |
-| name                 | TEXT        | Candidate name                            |
-| role_applied         | TEXT        | Applied role                              |
-| applied_date         | TEXT        | Application date                          |
-| ref_id               | TEXT        | Unique reference ID                       |
-| email                | TEXT        | Candidate email                           |
-| phone                | TEXT        | Candidate phone                           |
-| location             | TEXT        | Candidate location                        |
-| current_location     | TEXT        | Current location                          |
-| linkedin_url         | TEXT        | LinkedIn profile                          |
-| github_url           | TEXT        | GitHub profile                            |
-| resume_path          | TEXT        | Resume file path                          |
-| cv_path              | TEXT        | CV file path                              |
-| status               | TEXT        | Candidate status                          |
-| opening_id           | TEXT        | References active_openings(id)            |
-| skills               | JSONB       | Skill metadata                            |
-| education_details    | JSONB       | Education details                         |
-| academic_background  | JSONB       | Academic background                       |
-| qa_responses         | JSONB       | QA responses                              |
-| ai_summary           | TEXT        | AI interview summary                      |
-| ai_match             | TEXT        | AI match label                            |
-| resume_highlights    | JSONB       | Resume highlights                         |
-| additional_questions | JSONB       | Additional resume questions               |
-| professor_notes      | TEXT        | Professor notes                           |
-| hr_notes             | TEXT        | HR notes                                  |
-| interview_at         | TIMESTAMPTZ | Interview timestamp                       |
-| created_at           | TIMESTAMPTZ | Creation timestamp                        |
-+----------------------+-------------+-------------------------------------------+
-```
-
----
-
-## applications
-Public applicant submissions and application data.
-
-```sql
-Table: applications
-+------------------+-------------+-------------------------------------------+
-| Column           | Type        | Notes                                     |
-+------------------+-------------+-------------------------------------------+
-| id               | SERIAL      | Primary key                               |
-| application_uid  | TEXT        | Unique application UUID                   |
-| opening_id       | TEXT        | References active_openings(id)            |
-| request_id       | TEXT        | References hiring_requests(id)            |
-| professor_id     | TEXT        | References professors(id)                 |
-| hiring_manager_id| TEXT        | References hiring_managers(id)            |
-| candidate_uid    | TEXT        | Candidate UUID                            |
-| source           | TEXT        | Source channel                            |
-| full_name        | TEXT        | Applicant name                            |
-| email            | TEXT        | Applicant email                           |
-| phone            | TEXT        | Applicant phone                           |
-| linkedin_url     | TEXT        | LinkedIn URL                              |
-| github_url       | TEXT        | GitHub URL                                |
-| cover_note       | TEXT        | Cover note                                |
-| resume_path      | TEXT        | Resume file path                          |
-| cv_path          | TEXT        | CV file path                              |
-| token            | TEXT        | Applicant token                           |
-| status           | TEXT        | Application status                        |
-| education        | JSONB       | Education JSON data                       |
-| submitted_at     | TIMESTAMPTZ | Submission timestamp                      |
-+------------------+-------------+-------------------------------------------+
-```
-
----
-
-## candidate_profiles
-Rich candidate profile records with full hiring data.
-
-```sql
-Table: candidate_profiles
-+----------------------+-------------+-------------------------------------------+
-| Column               | Type        | Notes                                     |
-+----------------------+-------------+-------------------------------------------+
-| id                   | SERIAL      | Primary key                               |
-| candidate_uid        | TEXT        | Unique candidate UUID                     |
-| application_id       | INT         | References applications(id)               |
-| hiring_request_id    | TEXT        | References hiring_requests(id)            |
-| opening_id           | TEXT        | References active_openings(id)            |
-| request_id           | TEXT        | Request reference                          |
-| name                 | TEXT        | Candidate name                            |
-| email                | TEXT        | Candidate email                           |
-| phone                | TEXT        | Candidate phone                           |
-| current_location     | TEXT        | Current location                          |
-| role_applied         | TEXT        | Role applied for                          |
-| status               | TEXT        | Current status                            |
-| ref_id               | TEXT        | Reference ID                              |
-| linkedin_url         | TEXT        | LinkedIn URL                              |
-| github_url           | TEXT        | GitHub URL                                |
-| resume_path          | TEXT        | Resume path                               |
-| cv_path              | TEXT        | CV path                                   |
-| cover_note           | TEXT        | Cover note                                |
-| academic_background  | JSONB       | Academic background data                  |
-| education_history    | JSONB       | Education history                         |
-| skills               | JSONB       | Skills data                               |
-| additional_questions | JSONB       | Additional question responses             |
-| ai_interview_summary | TEXT        | AI interview summary                      |
-| chatbot_transcript   | JSONB       | Chatbot transcript                        |
-| hiring_manager_notes | TEXT        | Hiring manager notes                      |
-| professor_notes      | TEXT        | Professor notes                           |
-| hr_notes             | TEXT        | HR notes                                  |
-| created_at           | TIMESTAMPTZ | Creation timestamp                        |
-| updated_at           | TIMESTAMPTZ | Update timestamp                          |
-+----------------------+-------------+-------------------------------------------+
-```
-
----
-
-## admissions
-Tracking applicant progress through admissions and screening.
-
-```sql
-Table: admissions
-+--------------------+-------------+-------------------------------------------+
-| Column             | Type        | Notes                                     |
-+--------------------+-------------+-------------------------------------------+
-| id                 | SERIAL      | Primary key                               |
-| opening_id         | TEXT        | References active_openings(id)            |
-| candidate_id       | INT         | References candidates(id)                 |
-| candidate_profile_id| INT         | References candidate_profiles(id)         |
-| stage              | TEXT        | Admissions stage                          |
-| score              | INT         | Score or rating                           |
-| notes              | TEXT        | Notes                                     |
-| created_at         | TIMESTAMPTZ | Creation timestamp                      |
-+--------------------+-------------+-------------------------------------------+
-```
-
----
-
-## jd_reviews
-Job description review and feedback history.
-
-```sql
-Table: jd_reviews
-+----------------+-------------+-------------------------------------------+
-| Column         | Type        | Notes                                     |
-+----------------+-------------+-------------------------------------------+
-| id             | SERIAL      | Primary key                               |
-| opening_id      | TEXT        | References active_openings(id)            |
-| feedback       | TEXT        | Reviewer feedback                         |
-| flags          | JSONB       | Review flags                              |
-| reviewer_name  | TEXT        | Reviewer name                             |
-| submitted_at   | TIMESTAMPTZ | Submission timestamp                      |
-+----------------+-------------+-------------------------------------------+
-```
-
----
-
-## interview_sessions
-Interview session records for professor and CHRO rounds.
-
-```sql
-Table: interview_sessions
-+-----------------------+----------------+-------------------------------------------+
-| Column                | Type           | Notes                                     |
-+-----------------------+----------------+-------------------------------------------+
-| id                    | SERIAL         | Primary key                               |
-| candidate_id          | INT            | References candidates(id)                 |
-| candidate_profile_id  | INT            | References candidate_profiles(id)         |
-| transcript            | JSONB          | Interview transcript data                 |
-| ai_scores             | JSONB          | AI score breakdown                        |
-| ai_overall            | DECIMAL(3,1)   | AI overall score                          |
-| manual_scores         | JSONB          | Manual scoring breakdown                  |
-| manual_overall        | DECIMAL(3,1)   | Manual overall score                      |
-| composite_score       | DECIMAL(3,1)   | Composite score                           |
-| status                | TEXT           | Interview status                          |
-| round_type            | TEXT           | Interview round type                      |
-| reviewer_id           | TEXT           | Reviewer ID                               |
-| conducted_at          | TIMESTAMPTZ   | Conducted timestamp                       |
-+-----------------------+----------------+-------------------------------------------+
-```
-
----
-
-## job_roles
-Represents the role and its connection to a request, opening, and stakeholders.
-
-```sql
-Table: job_roles
-+----------------------+-------------+-------------------------------------------+
-| Column               | Type        | Notes                                     |
-+----------------------+-------------+-------------------------------------------+
-| id                   | TEXT        | Primary key                               |
-| request_id           | TEXT        | References hiring_requests(id)            |
-| opening_id           | TEXT        | References active_openings(id)            |
-| title                | TEXT        | Role title                                |
-| description          | TEXT        | Role description                          |
-| department           | TEXT        | References departments(id)                |
-| professor_id         | TEXT        | References professors(id)                 |
-| hiring_manager_id    | TEXT        | References hiring_managers(id)            |
-| stage                | TEXT        | Workflow stage                            |
-| status               | TEXT        | Role status                               |
-| created_at           | TIMESTAMPTZ | Creation timestamp                        |
-+----------------------+-------------+-------------------------------------------+
-```
-
----
-
-## job_descriptions
-Drafts and review history for job descriptions.
-
-```sql
-Table: job_descriptions
-+----------------+-------------+-------------------------------------------+
-| Column         | Type        | Notes                                     |
-+----------------+-------------+-------------+-------------------------------------------+
-| id             | SERIAL      | Primary key                               |
-| role_id        | TEXT        | References job_roles(id)                  |
-| request_id     | TEXT        | References hiring_requests(id)            |
-| opening_id     | TEXT        | References active_openings(id)            |
-| author_type    | TEXT        | Author type                               |
-| author_id      | TEXT        | Author identifier                          |
-| version        | INT         | Draft version                             |
-| content        | TEXT        | JD content                                |
-| comments       | JSONB       | Reviewer comments                          |
-| status         | TEXT        | Draft status                               |
-| created_at     | TIMESTAMPTZ | Creation timestamp                        |
-| updated_at     | TIMESTAMPTZ | Update timestamp                          |
-+----------------+-------------+-------------------------------------------+
-```
-
----
-
-## candidate_rounds
-Logs each round for every candidate in the pipeline.
-
-```sql
-Table: candidate_rounds
-+----------------+-------------+-------------------------------------------+
-| Column         | Type        | Notes                                     |
-+----------------+-------------+-------------------------------------------+
-| id             | SERIAL      | Primary key                               |
-| candidate_id   | INT            | References candidate_profiles(id)         |
-| round_type     | TEXT        | Round type                                |
-| round_name     | TEXT        | Round name                                |
-| status         | TEXT        | Round status                              |
-| decision       | TEXT        | Proceed/reject/hold                       |
-| decision_notes | TEXT        | Decision notes                            |
-| round_data     | JSONB       | Round-specific data                       |
-| conducted_at   | TIMESTAMPTZ | Conducted timestamp                       |
-| created_at     | TIMESTAMPTZ | Creation timestamp                        |
-+----------------+-------------+-------------------------------------------+
-```
-
----
-
-## candidate_assets
-Stores resume/CV/LinkedIn/GitHub/profile asset links.
-
-```sql
-Table: candidate_assets
-+----------------+-------------+-------------------------------------------+
-| Column         | Type        | Notes                                     |
-+----------------+-------------+-------------------------------------------+
-| id             | SERIAL      | Primary key                               |
-| candidate_id   | INT            | References candidate_profiles(id)         |
-| asset_type     | TEXT        | Asset type                                |
-| url            | TEXT        | Asset URL                                 |
-| caption        | TEXT        | Asset caption                             |
-| uploaded_at    | TIMESTAMPTZ | Upload timestamp                          |
-+----------------+-------------+-------------------------------------------+
-```
-
----
-
-## kpi_stats
-Simple KPI cache table.
-
-```sql
-Table: kpi_stats
-+-------------+-------------+-------------------------------------------+
-| Column      | Type        | Notes                                     |
-+-------------+-------------+-------------------------------------------+
-| key         | TEXT        | Primary key                               |
-| value       | INT         | KPI numeric value                         |
-| updated_at  | TIMESTAMPTZ | Update timestamp                          |
-+-------------+-------------+-------------------------------------------+
-```
-
----
-*Last updated: April 10, 2026*
+MIT © HIRIS Team
