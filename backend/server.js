@@ -46,19 +46,11 @@ const swaggerSpec = swaggerJsdoc(options)
 // Use swagger-ui-express for your app documentation endpoint
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-app.use('/api/dashboard',        require('./routes/dashboard'))
-app.use('/api/hiring-requests',  require('./routes/hiringRequests'))
-app.use('/api/tasks',            require('./routes/tasks'))
-app.use('/api/agenda',           require('./routes/agenda'))
-app.use('/api/active-openings',  require('./routes/activeOpenings'))
-app.use('/api/candidates',       require('./routes/candidates'))
-app.use('/api/admissions',       require('./routes/admissions'))
-app.use('/api/applications',     require('./routes/applications'))
-app.use('/api/departments',      require('./routes/departments'))
-app.use('/api/jd-reviews',       require('./routes/jdReviews'))
-app.use('/api/interview-sessions', require('./routes/interviewSessions'))
-app.use('/api/jobs',              require('./routes/jobs'))
-app.use('/api/chro',             require('./routes/chro'))
+app.use('/api', require('./routes/core'))
+app.use('/api', require('./routes/assistant'))
+app.use('/api', require('./routes/chro'))
+app.use('/api', require('./routes/candidates'))
+app.use('/api/ai', require('./routes/ai'))
 
 /**
  * @swagger

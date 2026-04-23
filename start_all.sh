@@ -5,8 +5,6 @@
 #  Requires: Node.js, npm, PostgreSQL running
 # ============================================================
 
-set -e
-
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo ""
@@ -15,60 +13,63 @@ echo "║         HIRIS — Starting All Services        ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 
-# Helper: check node_modules exist, prompt install if missing
+# ── Step 1: Kill any processes already on our ports ────────────────────────
+echo "  Clearing ports 3001 and 5173..."
+lsof -ti :3001 | xargs kill -9 2>/dev/null || true
+lsof -ti :5173 | xargs kill -9 2>/dev/null || true
+sleep 1
+echo "  Ports cleared."
+echo ""
+
+# ── Step 2: Check node_modules ─────────────────────────────────────────────
 check_deps() {
   local dir="$1"
   local name="$2"
   if [ ! -d "$dir/node_modules" ]; then
     echo "  node_modules missing in $name — running npm install..."
-    (cd "$dir" && npm install)
+    (cd "$dir" && npm install --silent)
+    echo "  ✓ $name dependencies installed."
   fi
 }
 
-check_deps "$ROOT/backend"                   "backend"
-check_deps "$ROOT/frontend/landing"          "frontend/landing"
-check_deps "$ROOT/frontend/hiring-assistant" "frontend/hiring-assistant"
-check_deps "$ROOT/frontend/professor"        "frontend/professor"
-check_deps "$ROOT/frontend/chro"             "frontend/chro"
+check_deps "$ROOT/backend"      "backend"
+check_deps "$ROOT/frontend/app" "frontend/app"
 
-echo ""
-echo "  [1/5] Starting Backend API          → http://localhost:3001"
+# ── Step 3: Validate .env has GEMINI_API_KEY ──────────────────────────────
+if grep -q "your_gemini_api_key_here" "$ROOT/backend/.env" 2>/dev/null; then
+  echo ""
+  echo "  ⚠️  WARNING: GEMINI_API_KEY is not set in backend/.env"
+  echo "     AI features will use fallback responses."
+  echo "     Add your key: GEMINI_API_KEY=AIza..."
+  echo ""
+fi
+
+# ── Step 4: Start services ─────────────────────────────────────────────────
+echo "  [1/2] Starting Backend API          → http://localhost:3001"
 (cd "$ROOT/backend" && npm run dev) &
 API_PID=$!
 
-sleep 1
+sleep 2
 
-echo "  [2/5] Starting Landing Website      → http://localhost:5176"
-(cd "$ROOT/frontend/landing" && npm run dev) &
-LAND_PID=$!
+echo "  [2/2] Starting HIRIS Platform       → http://localhost:5173"
+(cd "$ROOT/frontend/app" && npm run dev -- --port 5173 --strictPort) &
+FRONTEND_PID=$!
 
-echo "  [3/5] Starting Hiring Assistant     → http://localhost:5173"
-(cd "$ROOT/frontend/hiring-assistant" && npm run dev) &
-HA_PID=$!
-
-echo "  [4/5] Starting Professor Portal     → http://localhost:5174"
-(cd "$ROOT/frontend/professor" && npm run dev) &
-PROF_PID=$!
-
-echo "  [5/5] Starting CHRO Portal          → http://localhost:5175"
-(cd "$ROOT/frontend/chro" && npm run dev) &
-CHRO_PID=$!
+sleep 2
 
 echo ""
 echo "╔══════════════════════════════════════════════╗"
 echo "║   All services running. Press Ctrl+C to stop ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
-echo "  Landing Website      : http://localhost:5176"
-echo "  Hiring Assistant     : http://localhost:5173"
-echo "  Professor Portal     : http://localhost:5174"
-echo "  CHRO Portal          : http://localhost:5175"
-echo "  Backend API          : http://localhost:3001"
+echo "  HIRIS Platform   : http://localhost:5173"
+echo "  Backend API      : http://localhost:3001"
+echo "  API Docs         : http://localhost:3001/api-docs"
 echo ""
-echo "  Sign up your organisation at http://localhost:5176/signup"
-echo "  Login at http://localhost:5176/login"
+echo "  Sign up          : http://localhost:5173/signup"
+echo "  Login            : http://localhost:5173/login"
 echo ""
 
-# Wait for all background processes; kill all on Ctrl+C
-trap "echo ''; echo 'Shutting down all services...'; kill $API_PID $LAND_PID $HA_PID $PROF_PID $CHRO_PID 2>/dev/null; exit 0" SIGINT SIGTERM
+# Graceful shutdown on Ctrl+C
+trap "echo ''; echo '  Shutting down all services...'; lsof -ti :3001 | xargs kill -9 2>/dev/null; lsof -ti :5173 | xargs kill -9 2>/dev/null; kill $API_PID $FRONTEND_PID 2>/dev/null; echo '  Done. Goodbye!'; exit 0" SIGINT SIGTERM
 wait

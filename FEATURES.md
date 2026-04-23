@@ -1,44 +1,124 @@
-# HIRIS Platform Features
+# HIRIS — Feature Catalogue
 
-HIRIS (Hiring and Recruitment Information System) is an intelligent, multi-portal B2B platform designed to streamline academic and professional recruitment.
+Complete list of all implemented features across every portal.
 
-## Platform Architecture
-The platform is broken down into three primary portals, each tailored to a specific organisational persona, managed by a central CHRO dashboard.
+---
 
-### 1. CHRO Portal (The Control Center)
-The CHRO portal provides a top-down view of the entire organisation's hiring pipelines, policies, and final-stage candidate approvals.
-- **Organisation Dashboard**: View live statistics on open positions, active applicants, and departmental pipeline health.
-- **Candidate Aggregation**: See a unified list of all candidates who have made it to the final HR round across all departments.
-- **Hiring Policy Management**: Upload and manage institutional rubrics, policies, and scoring criteria.
-- **Manager Assignment**: Delegate hiring responsibilities and job roles to specific professors or department heads.
-- **Final Approvals**: Review AI scores and Hiring Manager verdicts to make the final "Hire" or "Reject" decision.
+## 🌐 Landing & Onboarding
 
-### 2. Hiring Assistant Portal (The Operational Hub)
-Designed for HR personnel to manage the day-to-day operations of recruitment.
-- **Task & Agenda Management**: Track daily tasks and view upcoming interviews on a timeline.
-- **Job Request Processing**: Receive requests from Professors to open new roles and convert them into polished Job Descriptions (JDs).
-- **Application Builder**: Build custom application forms for candidates.
-- **Candidate Pipeline**: Move candidates through different stages (Applied, Screening, Interviewing, Offered).
-- **AI Resume Screening**: Automatically parse uploaded resumes to score candidates based on the JD requirements.
+| Feature | Status | Notes |
+|---|---|---|
+| Marketing homepage (Hero, Stats, Features, Pipeline, AI Highlight, CTA) | ✅ | `pages/landing/HomePage.jsx` |
+| Pricing page | ✅ | `pages/landing/PricingPage.jsx` |
+| Unified login page (email + SSO) | ✅ | `pages/landing/LoginPage.jsx` |
+| Role-based redirect after login | ✅ | Auth reads email pattern to determine portal |
+| Demo accounts (pre-filled on login page) | ✅ | `chro@hiris.com`, `hiring@hiris.com`, `faculty@hiris.com` |
+| 4-step Organisation Signup Wizard | ✅ | `pages/landing/onboarding/OrgSignup.jsx` |
+| — Step 1: Organisation details (name, URL, industry, size) | ✅ | |
+| — Step 2: Define roles & permissions | ✅ | Toggle permissions per role |
+| — Step 3: Invite team members | ✅ | Saves to localStorage for login |
+| — Step 4: Confirmation with portal links | ✅ | |
+| Light/Dark mode toggle | ✅ | Persisted to localStorage |
+| Times New Roman "H" logo across all navbars | ✅ | |
 
-### 3. Professor / Hiring Manager Portal (The Evaluation Hub)
-Designed for department leaders who need to evaluate candidates without getting bogged down in HR logistics.
-- **Job Requisition**: Request new roles for their department.
-- **JD Review**: Review and approve the Job Descriptions created by the Hiring Assistant.
-- **Candidate Shortlisting**: View the curated list of candidates that passed the initial HR screening.
-- **Interview Room**: A dedicated interface for conducting interviews, featuring:
-  - Live AI-generated transcriptions.
-  - Real-time scoring suggestions based on the institutional rubric.
-  - Three-column evaluation view (Candidate Info, Live Feed, Rubric Scoring).
+---
 
-### 4. Candidate Portal (The Application Flow)
-The public-facing application interface for job seekers.
-- **AI Copilot Application**: Instead of filling out rigid forms, candidates interact with an AI chatbot that collects their information conversationally.
-- **Document Upload**: Seamlessly upload CVs, cover letters, and portfolios.
-- **Status Tracking**: Candidates can view the real-time status of their application.
+## 🏢 CHRO Portal
 
-## Core Platform Features
-- **Persistent Dark Mode**: A unified, aesthetically pleasing dark mode toggle accessible across all portals.
-- **Unified Authentication**: Single Sign-On (SSO) structure allowing users to jump between portals if they have the appropriate roles.
-- **Organisational Onboarding**: A 4-step wizard for setting up new organisations, defining roles, and inviting team members.
-- **Data Isolation**: Multi-tenant architecture ensuring candidates and data are restricted to their specific organisation and department.
+| Feature | Status | Notes |
+|---|---|---|
+| Dashboard with KPI cards (open positions, applications, time-to-fill, offer rate) | ✅ | `CHRODashboard.jsx` |
+| Pending approvals panel | ✅ | |
+| Department pipeline chart | ✅ | |
+| Hiring Requests review | ✅ | `HiringRequests.jsx` |
+| Hiring Policies management | ✅ | `HiringPolicies.jsx` |
+| Job Roles browser | ✅ | `JobRoles.jsx` |
+| Analytics page | ✅ | `Analytics.jsx` |
+| Team Management (invite, role assignment) | ✅ | `TeamManagement.jsx` |
+| **AI Interview Room** | ✅ | `InterviewRoomCHRO.jsx` |
+| — Live transcript simulation | ✅ | |
+| — Real-time AI follow-up suggestions (Gemini) | ✅ | `POST /api/ai/interview-suggestion` |
+| — Rubric coverage tracker | ✅ | |
+| — Post-interview scoring & feedback | ✅ | |
+| — Accept / Hold / Reject decision | ✅ | |
+| Profile Settings modal | ✅ | |
+| Dark mode full coverage | ✅ | All hardcoded colours replaced with CSS variables |
+
+---
+
+## 🗂️ Hiring Assistant Portal
+
+| Feature | Status | Notes |
+|---|---|---|
+| Dashboard with tasks, agenda, and KPIs | ✅ | `Dashboard.jsx` |
+| Hiring Requests list & management | ✅ | `HiringRequests.jsx` |
+| **Job Posting Builder** | ✅ | `JobPostingBuilder.jsx` |
+| — ✨ AI-generated job description (Gemini) | ✅ | `POST /api/ai/generate-jd` |
+| — Rich text editor (bold, italic, lists) | ✅ | |
+| — Required skills tag manager | ✅ | |
+| — Drag-and-drop interview stage builder | ✅ | |
+| — Custom screening question builder | ✅ | |
+| — Send for Faculty approval | ✅ | |
+| Active Openings browser | ✅ | `ActiveOpenings.jsx` |
+| Admissions / candidate pipeline | ✅ | `Admissions.jsx` |
+| Candidate Profile deep-dive | ✅ | `CandidateProfile.jsx` |
+| Approval Submitted confirmation | ✅ | |
+
+---
+
+## 🎓 Professor / Faculty Portal
+
+| Feature | Status | Notes |
+|---|---|---|
+| Dashboard with candidate queue | ✅ | `ProfessorDashboard.jsx` |
+| Hiring request submission form | ✅ | Modal within dashboard |
+| JD Review screen | ✅ | `ProfessorJDReview.jsx` |
+| Candidate Profile with AI summary | ✅ | `ProfessorCandidateProfile.jsx` |
+| AI screening transcript viewer | ✅ | |
+| Interview Room with rubric scoring | ✅ | `ProfessorInterviewRoom.jsx` |
+| Trait-by-trait evaluation form | ✅ | |
+| Verdict submission (Shortlist / Hold / Reject) | ✅ | |
+
+---
+
+## 🙋 Candidate Portal
+
+| Feature | Status | Notes |
+|---|---|---|
+| Multi-step Application Form | ✅ | `ApplicationForm.jsx` |
+| Resume / CV file upload | ✅ | Multer backend |
+| **AI Pre-screening Chat (Gemini)** | ✅ | `AiChat.jsx` |
+| — Dynamic questions adapting to answers | ✅ | `POST /api/ai/chat-response` |
+| — Animated typing indicator | ✅ | |
+| — Progress counter (Q1/3, Q2/3 …) | ✅ | |
+| Thank You confirmation screen | ✅ | `ThankYouForApplying.jsx` |
+
+---
+
+## 🤖 AI Features (Gemini 2.0 Flash)
+
+| Feature | Endpoint | Portal |
+|---|---|---|
+| Job Description Generation | `POST /api/ai/generate-jd` | Hiring Assistant |
+| Dynamic Candidate Pre-screening | `POST /api/ai/chat-response` | Candidate |
+| Live Interview Suggestions | `POST /api/ai/interview-suggestion` | CHRO, Professor |
+| Candidate Match Summary | `POST /api/ai/candidate-summary` | Any profile view |
+
+All AI is **server-side only** — the Gemini API key never reaches the browser.
+
+---
+
+## 🛠️ Infrastructure & DevEx
+
+| Feature | Status |
+|---|---|
+| `start_all.sh` — one-command startup | ✅ (kills stale ports, warns on missing API key) |
+| Nodemon backend hot-reload | ✅ |
+| Vite HMR frontend hot-reload | ✅ |
+| Swagger API docs at `/api-docs` | ✅ |
+| PostgreSQL schema + seed script | ✅ |
+| CORS configured for localhost dev | ✅ |
+| Multer file upload to `/uploads` | ✅ |
+| Light + Dark mode CSS variable system | ✅ |
+| Global Toast notification system | ✅ |
+| Auth context (localStorage) | ✅ |

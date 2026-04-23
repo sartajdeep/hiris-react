@@ -1,6 +1,6 @@
 # HIRIS — Hiring & Recruitment Information System
 
-> A full-stack AI-assisted hiring platform connecting **Candidates**, **Hiring Managers**, **Professors/Evaluators**, and the **CHRO** through a unified recruitment workflow.
+> A full-stack, AI-powered hiring platform connecting **Candidates**, **Hiring Assistants**, **Professors/Evaluators**, and the **CHRO** through a unified, intelligent recruitment workflow.
 
 ---
 
@@ -10,6 +10,7 @@
 - [Architecture](#architecture)
 - [Directory Structure](#directory-structure)
 - [Portals & Features](#portals--features)
+- [AI Features](#ai-features)
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Database Setup](#database-setup)
@@ -25,7 +26,7 @@
 
 HIRIS is a multi-portal hiring platform that digitises and AI-assists every stage of the recruitment lifecycle — from job creation and candidate application, through AI-powered interviews, to final CHRO review and offer.
 
-The system is split into **three React frontends** and **one shared Express + PostgreSQL backend API**, all living in a single monorepo.
+The system uses a **unified monolithic React frontend** (`frontend/app`) and a **single Express + PostgreSQL backend API** with domain-based routing, living together in one monorepo.
 
 ---
 
@@ -36,27 +37,23 @@ The system is split into **three React frontends** and **one shared Express + Po
                     │         HIRIS Monorepo           │
                     └─────────────────────────────────┘
                                     │
-           ┌────────────────────────┼────────────────────────┐
-           │                        │                        │
-   ┌───────▼───────┐      ┌─────────▼──────┐      ┌────────▼────────┐
-   │  Hiring Asst  │      │  CHRO Portal   │      │Professor Portal │
-   │  + Candidate  │      │  (React/Vite)  │      │  (React/Vite)   │
-   │  (React/Vite) │      │  :5175         │      │  :5174          │
-   │  :5173        │      └───────┬────────┘      └────────┬────────┘
-   └───────┬───────┘              │                        │
-           │                      │                        │
-           └──────────────────────┼────────────────────────┘
-                                  │  REST API calls
-                          ┌───────▼───────┐
-                          │  Express API  │
-                          │  (Node.js)    │
-                          │  :3001        │
-                          └───────┬───────┘
-                                  │
-                          ┌───────▼───────┐
-                          │  PostgreSQL   │
-                          │  Database     │
-                          └───────────────┘
+              ┌─────────────────────┴────────────────────┐
+              │                                           │
+   ┌──────────▼──────────┐                    ┌──────────▼──────────┐
+   │   React Frontend    │                    │   Express Backend   │
+   │   frontend/app      │  ──REST API──►     │   backend/          │
+   │   :5173             │                    │   :3001             │
+   └─────────────────────┘                    └──────────┬──────────┘
+                                                         │
+                                              ┌──────────▼──────────┐
+                                              │     PostgreSQL       │
+                                              │     Database         │
+                                              └─────────────────────┘
+                                                         │
+                                              ┌──────────▼──────────┐
+                                              │   Google Gemini AI   │
+                                              │   (via @google/genai)│
+                                              └─────────────────────┘
 ```
 
 ---
@@ -67,149 +64,119 @@ The system is split into **three React frontends** and **one shared Express + Po
 hiris-react/
 │
 ├── frontend/
-│   ├── hiring-assistant/          # Hiring Manager + Candidate Portal
-│   │   ├── src/
-│   │   │   ├── api/               # API client (axios wrapper)
-│   │   │   ├── components/
-│   │   │   │   ├── layout/        # Header, Footer, Breadcrumb
-│   │   │   │   ├── dashboard/     # Task, Agenda widgets
-│   │   │   │   └── hiring/        # Kanban, RequestCard
-│   │   │   ├── data/              # Static/mock data files
-│   │   │   ├── hooks/             # useLiveClock, useTasks
-│   │   │   ├── pages/
-│   │   │   │   ├── hiringassistant/  # 11 hiring manager screens
-│   │   │   │   └── candidateapplicationform/  # 3 candidate screens
-│   │   │   ├── App.jsx
-│   │   │   └── main.jsx
-│   │   ├── index.html
-│   │   ├── vite.config.js
-│   │   ├── tailwind.config.js
-│   │   └── package.json
-│   │
-│   ├── chro/                      # CHRO (Chief HR Officer) Portal
-│   │   ├── src/
-│   │   │   ├── api/
-│   │   │   ├── assets/
-│   │   │   ├── components/
-│   │   │   │   ├── Layout.jsx     # Sidebar + header shell
-│   │   │   │   └── ToastContext.jsx
-│   │   │   ├── pages/chro/        # 8 CHRO screens
-│   │   │   │   ├── CHRODashboard.jsx
-│   │   │   │   ├── InterviewRoomCHRO.jsx  # AI interview room
-│   │   │   │   ├── HiringRequests.jsx
-│   │   │   │   ├── HiringPolicies.jsx
-│   │   │   │   ├── JobRoles.jsx
-│   │   │   │   ├── AssignManagers.jsx
-│   │   │   │   ├── Analytics.jsx
-│   │   │   │   └── Settings.jsx
-│   │   │   ├── App.jsx
-│   │   │   └── main.jsx
-│   │   ├── index.html
-│   │   ├── vite.config.js
-│   │   └── package.json
-│   │
-│   └── professor/                 # Professor / Evaluator Portal
+│   └── app/                           # Unified React Application (all portals)
 │       ├── src/
 │       │   ├── api/
-│       │   ├── components/layout/
-│       │   ├── hooks/
-│       │   ├── pages/professor/   # 4 professor screens
-│       │   │   ├── ProfessorDashboard.jsx
-│       │   │   ├── ProfessorCandidateProfile.jsx
-│       │   │   ├── ProfessorJDReview.jsx
-│       │   │   └── ProfessorInterviewRoom.jsx
-│       │   ├── App.jsx
+│       │   │   └── client.js          # Centralised API + AI client
+│       │   ├── auth/
+│       │   │   ├── AuthContext.jsx    # Auth provider (localStorage-based)
+│       │   │   └── ProtectedRoute.jsx
+│       │   ├── components/
+│       │   │   ├── landing-layout/    # Navbar, Footer for landing pages
+│       │   │   └── shared/            # GlobalHeader, PortalLayout, ThemeToggle
+│       │   ├── context/
+│       │   │   ├── ThemeContext.jsx   # Light/dark mode
+│       │   │   └── ToastContext.jsx   # Toast notifications
+│       │   ├── pages/
+│       │   │   ├── landing/           # Homepage, Pricing, Login, OrgSignup
+│       │   │   │   └── onboarding/    # OrgSignup multi-step wizard
+│       │   │   ├── chro/              # CHRO portal screens
+│       │   │   ├── hiringassistant/   # Hiring Assistant screens
+│       │   │   ├── professor/         # Faculty/Evaluator screens
+│       │   │   └── candidate/         # Candidate application flow
+│       │   ├── App.jsx                # Root router
+│       │   ├── index.css              # Global design system
 │       │   └── main.jsx
 │       ├── index.html
 │       ├── vite.config.js
 │       └── package.json
 │
-├── backend/                       # Express + PostgreSQL REST API
+├── backend/                           # Express + PostgreSQL REST API
 │   ├── db/
-│   │   ├── pool.js                # PostgreSQL connection pool
-│   │   ├── schema.sql             # Full table definitions
-│   │   └── seed.js                # Sample data seeding
-│   ├── middleware/
-│   │   └── upload.js              # Multer file upload config
+│   │   ├── pool.js                    # PostgreSQL connection pool
+│   │   ├── schema.sql                 # Full table definitions
+│   │   └── seed.js                    # Sample data seeding
 │   ├── routes/
-│   │   ├── dashboard.js
-│   │   ├── hiringRequests.js
-│   │   ├── tasks.js
-│   │   ├── agenda.js
-│   │   ├── activeOpenings.js
-│   │   ├── candidates.js
-│   │   ├── admissions.js
-│   │   ├── applications.js
-│   │   ├── departments.js
-│   │   ├── jdReviews.js
-│   │   ├── interviewSessions.js
-│   │   ├── jobs.js
-│   │   └── chro.js
-│   ├── server.js                  # Express app entry point
-│   ├── .env                       # DB credentials (git-ignored)
+│   │   ├── core.js                    # Dashboard, Tasks, Agenda, Departments
+│   │   ├── assistant.js               # Jobs, Admissions, Openings, Applications
+│   │   ├── chro.js                    # CHRO KPIs, Approvals, Pipeline
+│   │   ├── candidates.js              # Candidate records & interview sessions
+│   │   └── ai.js                      # 🤖 Gemini AI endpoints
+│   ├── server.js                      # Express app entry point
+│   ├── .env                           # Credentials (git-ignored)
 │   └── package.json
 │
-├── start_all.sh                   # One-command dev startup script
-└── README.md
+├── start_all.sh                       # One-command dev startup script
+├── README.md
+├── FEATURES.md
+└── TECHNICAL_DOCS.md
 ```
 
 ---
 
 ## Portals & Features
 
-### 1. Hiring Assistant (`frontend/hiring-assistant/`) — Port 5173
-Used by **Hiring Managers** to manage the full recruitment pipeline.
+### Landing & Onboarding (`:5173`)
 
 | Screen | Route | Description |
 |---|---|---|
-| Dashboard | `/` | Overview with tasks, agenda, KPIs |
-| Hiring Requests | `/hiring-requests` | View/manage open requests |
-| Job Posting Builder | `/job-posting-builder` | Create a job description |
-| Publish | `/publish` | Review & publish the JD |
-| Job Posted | `/job-posted` | Confirmation screen |
-| Active Openings | `/active-openings` | Browse live postings |
-| Admissions | `/admissions` | Manage incoming applications |
-| Admissions Edit | `/admissions/edit` | Edit an existing posting |
-| Application Details | `/application-details` | Deep-dive one application |
-| Candidate Profile | `/candidate-profile` | Full candidate profile |
-| Approval Submitted | `/approval-submitted` | Post-approval confirmation |
+| Home | `/` | Marketing landing page |
+| Pricing | `/pricing` | Pricing tiers |
+| Login | `/login` | Single sign-in for all roles |
+| Org Signup | `/signup` | 4-step onboarding wizard |
 
-**Candidate-facing screens** (embedded in same app):
+### CHRO Portal (`:5173/chro/*`)
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/chro/dashboard` | Company-wide hiring overview |
+| Hiring Requests | `/chro/requests` | Review all department requests |
+| Interview Room | `/chro/interview-room/:id` | 🤖 AI-powered live interview |
+| Hiring Policies | `/chro/policies` | Manage HR policies |
+| Job Roles | `/chro/job-roles` | Browse/manage roles |
+| Analytics | `/chro/analytics` | Hiring analytics & charts |
+| Team Management | `/chro/team` | Manage users & roles |
+
+### Hiring Assistant Portal (`:5173/hiring-assistant/*`)
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/hiring-assistant/dashboard` | Task, agenda & KPIs |
+| Hiring Requests | `/hiring-assistant/requests` | View/manage open requests |
+| Job Posting Builder | `/hiring-assistant/job-posting-builder` | 🤖 AI-assisted JD creation |
+| Active Openings | `/hiring-assistant/active-openings` | Browse live postings |
+| Admissions | `/hiring-assistant/admissions` | Manage incoming applications |
+| Candidate Profile | `/hiring-assistant/candidate-profile/:id` | Full candidate view |
+
+### Professor / Faculty Portal (`:5173/professor/*`)
+
+| Screen | Route | Description |
+|---|---|---|
+| Dashboard | `/professor/dashboard` | Candidate queue |
+| JD Review | `/professor/jd-review` | Review & approve JDs |
+| Interview Room | `/professor/interview/:id` | Conduct technical interview |
+| Candidate Profile | `/professor/candidate/:id` | Deep candidate assessment |
+
+### Candidate Portal (`:5173/*`)
 
 | Screen | Route | Description |
 |---|---|---|
 | Application Form | `/application-form` | Multi-step job application |
-| AI Chat | `/ai-chat` | AI assistant during application |
-| Thank You | `/thank-you` | Post-submission confirmation |
+| AI Chat | `/ai-chat` | 🤖 Dynamic AI pre-screening |
+| Thank You | `/thank-you-for-applying` | Post-submission confirmation |
 
 ---
 
-### 2. CHRO Portal (`frontend/chro/`) — Port 5175
-Used by the **Chief Human Resources Officer** for executive oversight.
+## AI Features
 
-| Screen | Route | Description |
+HIRIS integrates Google Gemini AI via a dedicated backend route (`/api/ai/*`). All AI calls are server-side — the API key never reaches the browser.
+
+| Feature | Endpoint | Where Used |
 |---|---|---|
-| Dashboard | `/` | Company-wide hiring overview |
-| Interview Room | `/chro/interview-room/:candidateId` | AI-powered live interview |
-| Hiring Requests | `/chro/requests` | Review all requests |
-| Hiring Policies | `/chro/policies` | Manage HR policies |
-| Job Roles | `/chro/job-roles` | Browse/manage roles |
-| Assign Managers | `/chro/assign-managers` | Assign HMs to roles |
-| Analytics | `/chro/analytics` | Hiring analytics & charts |
-| Settings | `/chro/settings` | Account & system config |
-
----
-
-### 3. Professor Portal (`frontend/professor/`) — Port 5174
-Used by **academic evaluators** to assess candidates and review JDs.
-
-| Screen | Route | Description |
-|---|---|---|
-| Dashboard | `/` | Candidate queue overview |
-| JD Review | `/jd-review` | Review job descriptions |
-| JD Review (role) | `/jd-review/:roleId` | Role-specific JD review |
-| Interview Room | `/interview/:roleId` | Conduct an interview |
-| Candidate Profile | `/candidate/:id` | Deep candidate assessment |
+| ✨ Job Description Generation | `POST /api/ai/generate-jd` | Hiring Assistant → Job Builder |
+| 🤖 Dynamic Candidate Chat | `POST /api/ai/chat-response` | Candidate → AI Pre-screening |
+| 🎯 Live Interview Suggestions | `POST /api/ai/interview-suggestion` | CHRO / Professor Interview Room |
+| 📋 Candidate Summary | `POST /api/ai/candidate-summary` | Candidate Profile views |
 
 ---
 
@@ -217,10 +184,11 @@ Used by **academic evaluators** to assess candidates and review JDs.
 
 | Layer | Technology |
 |---|---|
-| Frontend Framework | React 18/19 + Vite |
-| Routing | React Router v6/v7 |
-| Styling | TailwindCSS + Vanilla CSS |
-| UI Icons | Lucide React |
+| Frontend Framework | React 19 + Vite 8 |
+| Routing | React Router v7 |
+| Styling | TailwindCSS v4 + Vanilla CSS Design System |
+| UI Icons | Material Symbols Outlined + Lucide React |
+| AI | Google Gemini 2.0 Flash (`@google/genai`) |
 | Backend | Node.js + Express 4 |
 | Database | PostgreSQL (via `pg` pool) |
 | File Uploads | Multer |
@@ -233,7 +201,7 @@ Used by **academic evaluators** to assess candidates and review JDs.
 
 - **Node.js** v18+ and **npm** v9+
 - **PostgreSQL** v14+ running locally
-- **Git**
+- **Google Gemini API key** (free at [aistudio.google.com](https://aistudio.google.com))
 
 ---
 
@@ -258,13 +226,16 @@ Used by **academic evaluators** to assess candidates and review JDs.
 
 ## Environment Variables
 
-Create a `.env` file inside `backend/` (already present from migration):
+Create / update `backend/.env`:
 
 ```env
 # backend/.env
 DATABASE_URL=postgresql://<user>:<password>@localhost:5432/hiris
 PORT=3001
 FRONTEND_URL=http://localhost:5173
+
+# AI Integration (required for AI features)
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 > **Never commit `.env` to version control.** It is already listed in `.gitignore`.
@@ -281,14 +252,16 @@ bash start_all.sh
 ```
 
 This script will:
-1. Auto-run `npm install` in any directory missing `node_modules`
-2. Start all 4 services concurrently in the background
-3. Print all URLs
-4. Gracefully stop everything with `Ctrl+C`
+1. **Kill** any existing processes on ports 3001 and 5173
+2. Auto-run `npm install` in any directory missing `node_modules`
+3. Start backend and frontend concurrently
+4. Print all URLs
+5. Warn if `GEMINI_API_KEY` is not configured
+6. Gracefully stop everything with `Ctrl+C`
 
 ---
 
-### Option B — Manual (run each in a separate terminal)
+### Option B — Manual (two terminals)
 
 ```bash
 # Terminal 1 — Backend API
@@ -296,18 +269,8 @@ cd backend
 npm install
 npm run dev
 
-# Terminal 2 — Hiring Assistant + Candidate Portal
-cd frontend/hiring-assistant
-npm install
-npm run dev
-
-# Terminal 3 — Professor Portal
-cd frontend/professor
-npm install
-npm run dev
-
-# Terminal 4 — CHRO Portal
-cd frontend/chro
+# Terminal 2 — Frontend (all portals)
+cd frontend/app
 npm install
 npm run dev
 ```
@@ -319,22 +282,16 @@ npm run dev
 All API endpoints are served from `http://localhost:3001`.  
 Interactive Swagger docs: **http://localhost:3001/api-docs**
 
-| Base Path | Route File | Description |
+### Domain Routers
+
+| Base Path | Router File | Covers |
 |---|---|---|
 | `GET /api/health` | inline | Health check |
-| `/api/dashboard` | `dashboard.js` | Dashboard stats |
-| `/api/hiring-requests` | `hiringRequests.js` | Create/approve/reject requests |
-| `/api/tasks` | `tasks.js` | Task management |
-| `/api/agenda` | `agenda.js` | Interview agenda events |
-| `/api/active-openings` | `activeOpenings.js` | Live job listings |
-| `/api/candidates` | `candidates.js` | Candidate records |
-| `/api/admissions` | `admissions.js` | Application tracking |
-| `/api/applications` | `applications.js` | Application submissions |
-| `/api/departments` | `departments.js` | Department data |
-| `/api/jd-reviews` | `jdReviews.js` | JD review workflow |
-| `/api/interview-sessions` | `interviewSessions.js` | Interview session data |
-| `/api/jobs` | `jobs.js` | Job postings CRUD |
-| `/api/chro` | `chro.js` | CHRO-specific operations |
+| `/api/*` | `core.js` | Dashboard, Tasks, Agenda, Departments, Hiring Requests |
+| `/api/*` | `assistant.js` | Jobs, Active Openings, Admissions, Applications |
+| `/api/chro/*` | `chro.js` | CHRO KPIs, Approvals, Department Pipeline |
+| `/api/candidates/*` | `candidates.js` | Candidate records, Interview Sessions |
+| `/api/ai/*` | `ai.js` | Gemini AI — JD gen, chat, interview suggestions, candidate summary |
 
 ---
 
@@ -342,11 +299,9 @@ Interactive Swagger docs: **http://localhost:3001/api-docs**
 
 | Service | URL |
 |---|---|
+| HIRIS Platform (all portals) | http://localhost:5173 |
 | Backend API | http://localhost:3001 |
 | API Docs (Swagger) | http://localhost:3001/api-docs |
-| Hiring Assistant + Candidate Portal | http://localhost:5173 |
-| Professor / Evaluator Portal | http://localhost:5174 |
-| CHRO Portal | http://localhost:5175 |
 
 ---
 
@@ -354,39 +309,29 @@ Interactive Swagger docs: **http://localhost:3001/api-docs**
 
 ```
 CANDIDATE
-  └─► /application-form  →  /ai-chat  →  /thank-you
-                                              │
-                                    (application submitted)
-                                              │
-HIRING MANAGER                                ▼
-  └─► /admissions  →  /application-details  →  /candidate-profile
-                                              │
-                                     (request approved)
-                                              │
-CHRO                                          ▼
-  └─► /chro/requests  →  /chro/interview-room/:candidateId
-                                              │
-                                     (final evaluation)
-                                              │
-PROFESSOR                                     ▼
-  └─► /jd-review/:roleId  →  /interview/:roleId  →  /candidate/:id
+  └─► /application-form  →  /ai-chat (🤖 AI screening)  →  /thank-you-for-applying
+                                          │
+                                (application submitted to DB)
+                                          │
+HIRING ASSISTANT                          ▼
+  └─► /admissions  →  /candidate-profile  →  (shortlist)
+                                          │
+                              (hiring request approved)
+                                          │
+PROFESSOR                                 ▼
+  └─► /jd-review  →  /interview/:id (conduct interview)  →  /candidate/:id
+                                          │
+                                 (verdict submitted)
+                                          │
+CHRO                                      ▼
+  └─► /chro/requests  →  /chro/interview-room/:id (🤖 AI live suggestions)
+                                          │
+                                  (final decision)
 ```
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Commit your changes: `git commit -m 'feat: add your feature'`
-4. Push to the branch: `git push origin feat/your-feature`
-5. Open a Pull Request
 
 ---
 
 ## License
 
-© HIRIS Team
-Smriti Kinra
-Sartajdeep Singh
-Gracy Tanna
+© HIRIS Team  
+Smriti Kinra · Sartajdeep Singh · Gracy Tanna

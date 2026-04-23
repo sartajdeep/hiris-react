@@ -1,6 +1,6 @@
 # HIRIS PostgreSQL Table Reference
 
-This document lists all PostgreSQL tables defined in `hiris-api/db/schema.sql`, with each table's columns and purpose.
+This document lists all PostgreSQL tables defined in `backend/db/schema.sql`, with each table's columns and purpose.
 
 ---
 
