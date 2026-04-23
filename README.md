@@ -386,4 +386,7 @@ PROFESSOR                                     ▼
 
 ## License
 
-MIT © HIRIS Team
+© HIRIS Team
+Smriti Kinra
+Sartajdeep Singh
+Gracy Tanna
