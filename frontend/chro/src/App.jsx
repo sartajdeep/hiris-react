@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastProvider } from './components/ToastContext'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
+import { ThemeProvider } from './components/ThemeContext'
+import ThemeToggle from './components/ThemeToggle'
 
 import ProtectedRoute from './auth/ProtectedRoute'
 import './index.css'
@@ -17,10 +19,12 @@ import Settings          from './pages/chro/Settings'
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <ToastProvider>
-          <Routes>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <ToastProvider>
+            <ThemeToggle />
+            <Routes>
             {/* Public auth routes */}
             <Route path="/login"      element={<LoginPage />} />
     
@@ -39,5 +43,6 @@ export default function App() {
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
+    </ThemeProvider>
   )
 }

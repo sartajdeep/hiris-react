@@ -1,7 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
-
+import { ThemeProvider } from './components/ThemeContext'
+import ThemeToggle from './components/ThemeToggle'
 import ProtectedRoute from './auth/ProtectedRoute'
 import Dashboard from './pages/hiringassistant/Dashboard'
 import HiringRequests from './pages/hiringassistant/HiringRequests'
@@ -20,8 +21,10 @@ import ThankYouForApplying from './pages/candidateapplicationform/ThankYouForApp
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <ThemeToggle />
+        <Routes>
         {/* Public auth routes */}
         <Route path="/login" element={<LoginPage />} />
 
@@ -44,5 +47,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthProvider>
+    </ThemeProvider>
   )
 }
