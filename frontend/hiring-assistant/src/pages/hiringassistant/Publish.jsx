@@ -1,8 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function Publish() {
   const navigate = useNavigate()
@@ -22,12 +19,8 @@ export default function Publish() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased flex flex-col min-h-screen">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Hiring Requests', to: '/hiring-requests' },
-        { label: 'Publish' }
-      ]} />
+      
+      
       <main className="flex-grow flex items-center justify-center px-8 py-10 bg-[#F8FAFC]">
         <div className="w-full max-w-3xl bg-white rounded-xl shadow-md border border-[#E2E8F0] overflow-hidden">
           <div className="bg-[#F8FAFC] border-b border-[#E2E8F0] p-6 relative overflow-hidden flex items-center gap-4 isolate">
@@ -98,7 +91,7 @@ export default function Publish() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

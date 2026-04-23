@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import Header from '../components/layout/Header'
 
 export default function ProfessorCandidateProfile() {
   const { id } = useParams()
@@ -52,7 +51,7 @@ export default function ProfessorCandidateProfile() {
 
   return (
     <div className="bg-[#F4F6FA] text-[#1A2B4A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
+      
       
       {/* BREADCRUMB */}
       <nav className="bg-white border-b border-slate-200 px-8 py-3 flex items-center gap-2 text-[11px] text-[#6B7A99] font-medium shrink-0">

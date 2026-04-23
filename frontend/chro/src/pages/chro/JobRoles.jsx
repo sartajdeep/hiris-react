@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from '../../components/Layout';
 import { useToast } from '../../components/ToastContext';
 import { api } from '../../api/client';
 
@@ -26,7 +25,7 @@ export default function JobRoles() {
   }, []);
 
   return (
-    <Layout variant="chro">
+    <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '26px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -69,6 +68,6 @@ export default function JobRoles() {
           </table>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

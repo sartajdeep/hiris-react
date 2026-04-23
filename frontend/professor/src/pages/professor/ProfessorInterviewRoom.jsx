@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Footer from '../../components/layout/Footer'
 
 export default function ProfessorInterviewRoom() {
   const { roleId } = useParams()
@@ -115,7 +113,7 @@ export default function ProfessorInterviewRoom() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] min-h-screen flex flex-col font-sans">
-      <Header />
+      
 
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-[1200px] mx-auto p-8 flex flex-col">
@@ -281,7 +279,7 @@ export default function ProfessorInterviewRoom() {
 
       </main>
 
-      <Footer />
+      
     </div>
   )
 }

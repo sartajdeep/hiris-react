@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Header from '../components/layout/Header'
 
 export default function ProfessorDashboard() {
   const navigate = useNavigate()
@@ -69,7 +68,7 @@ export default function ProfessorDashboard() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans overflow-hidden">
-      <Header />
+      
       
       {/* Sub Header Navbar */}
       <div className="bg-white border-b border-[#E2E8F0] px-8 flex items-center justify-center gap-7 text-[11px] font-semibold text-slate-400 uppercase tracking-[.15em] h-10 shrink-0">

@@ -1,5 +1,3 @@
-import Header from '../../components/layout/Header'
-import Footer from '../../components/layout/Footer'
 import AgendaTimeline from '../../components/dashboard/AgendaTimeline'
 import TaskItem from '../../components/dashboard/TaskItem'
 import AddTaskModal from '../../components/dashboard/AddTaskModal'
@@ -52,7 +50,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased flex flex-col min-h-screen">
-      <Header showSearch={false} />
+      
       {/* Dashboard breadcrumb: Home only, no Dashboard link */}
       <nav className="h-[40px] px-8 flex items-center bg-white border-b border-[#F1F5F9] text-[11px] font-medium text-[#94A3B8]">
         <ol className="inline-flex items-center gap-1.5">
@@ -143,7 +141,7 @@ export default function Dashboard() {
           <AgendaTimeline currentDate={currentDate} liveTimeText={liveTimeText} indicatorTop={indicatorTop} events={agenda} />
         </section>
       </main>
-      <Footer />
+      
       {modalOpen && <AddTaskModal onClose={closeModal} onAdd={addTask} />}
     </div>
   )

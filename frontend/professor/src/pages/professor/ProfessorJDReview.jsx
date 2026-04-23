@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 const API = 'http://localhost:3001/api'
 
@@ -100,12 +97,8 @@ export default function ProfessorJDReview() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased flex flex-col min-h-screen font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home',       to: '/' },
-        { label: 'Dashboard',  to: '/' },
-        { label: 'My Job Requests' },
-      ]} />
+      
+      
 
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-8 py-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -197,7 +190,7 @@ export default function ProfessorJDReview() {
         </div>
       </main>
 
-      <Footer />
+      
 
       {/* ── JD Review slider modal ── */}
       {/* ── JD Review Full-Page Modal ── */}

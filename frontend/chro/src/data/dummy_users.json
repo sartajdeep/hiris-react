@@ -1,0 +1,7 @@
+[
+  { "id": "u_1", "name": "Smriti Kinra", "email": "smriti@plaksha.edu", "roleId": "role_1", "department": "Administration", "avatar": "#28666E" },
+  { "id": "u_2", "name": "Sartajdeep Singh", "email": "sartaj@plaksha.edu", "roleId": "role_2", "department": "Human Resources", "avatar": "#7C3AED" },
+  { "id": "u_3", "name": "Dr. Julian Sterling", "email": "julian@plaksha.edu", "roleId": "role_3", "department": "Neuroscience", "avatar": "#EA580C" },
+  { "id": "u_4", "name": "Dr. Arjun Mehta", "email": "arjun@plaksha.edu", "roleId": "role_3", "department": "Computer Science", "avatar": "#2563EB" },
+  { "id": "u_5", "name": "Alex Costa", "email": "alex.intern@plaksha.edu", "roleId": "role_4", "department": "Human Resources", "avatar": "#059669" }
+]

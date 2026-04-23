@@ -1,8 +1,5 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function JobPosted() {
   const [copied, setCopied] = useState(false)
@@ -17,13 +14,8 @@ export default function JobPosted() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Hiring Requests', to: '/hiring-requests' },
-        { label: 'Job Posted' }
-      ]} />
+      
+      
       
       <main className="flex-grow flex items-center justify-center p-5">
         <div className="max-w-2xl w-full">
@@ -60,7 +52,7 @@ export default function JobPosted() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

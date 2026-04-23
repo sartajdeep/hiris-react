@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 import { getActiveOpenings } from '../../api/client'
 
 export default function ActiveOpenings() {
@@ -16,12 +13,8 @@ export default function ActiveOpenings() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Active Postings' }
-      ]} />
+      
+      
       <main className="flex-1 px-4 md:px-10 lg:px-40 py-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div className="flex flex-col gap-1">
@@ -85,7 +78,7 @@ export default function ActiveOpenings() {
           ))}
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

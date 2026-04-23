@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Layout from '../../components/Layout';
 import { useToast } from '../../components/ToastContext';
 
 const POLICIES = [
@@ -14,7 +13,7 @@ export default function HiringPolicies() {
   const [editing, setEditing] = useState(null);
 
   return (
-    <Layout variant="chro">
+    <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '26px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
@@ -63,6 +62,6 @@ export default function HiringPolicies() {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

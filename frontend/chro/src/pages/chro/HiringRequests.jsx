@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Layout from '../../components/Layout';
 import { useToast } from '../../components/ToastContext';
 
 const REQUESTS_DATA = [
@@ -26,7 +25,7 @@ export default function HiringRequests() {
   const resolved = reqs.filter(r => r.status === 'approved' || r.status === 'rejected');
 
   return (
-    <Layout variant="chro">
+    <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '26px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -97,6 +96,6 @@ export default function HiringRequests() {
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 }

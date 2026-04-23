@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 import { getCandidate, updateCandidateStatus } from '../../api/client'
 
 export default function CandidateProfile() {
@@ -41,23 +38,18 @@ export default function CandidateProfile() {
 
   if (!candidate) return (
     <div className="bg-[#F8FAFC] min-h-screen flex flex-col font-sans relative">
-      <Header />
+      
       <div className="flex-1 flex items-center justify-center">
         <div className="w-10 h-10 rounded-full border-4 border-[#28666E]/20 border-t-[#28666E] animate-spin"></div>
       </div>
-      <Footer />
+      
     </div>
   )
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Admissions', to: '/admissions' },
-        { label: 'Candidate Profile' }
-      ]} />
+      
+      
       
       <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-6 py-6 gap-5">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white p-5 rounded-xl shadow-card border border-[#E2E8F0] hover:shadow-md hover:-translate-y-px transition-all duration-150">
@@ -257,7 +249,7 @@ export default function CandidateProfile() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

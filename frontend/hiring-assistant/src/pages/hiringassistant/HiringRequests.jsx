@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 import { getHiringRequests } from '../../api/client'
 
 const COLS = ['Pending Review', 'Sent for Approval', 'Approved']
@@ -40,8 +37,8 @@ export default function HiringRequests() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased flex flex-col min-h-screen">
-      <Header showSearch={true} />
-      <Breadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Hiring Requests' }]} />
+      
+      
       <main className="flex-grow w-full max-w-[1400px] mx-auto px-8 py-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
           <div>
@@ -129,7 +126,7 @@ export default function HiringRequests() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

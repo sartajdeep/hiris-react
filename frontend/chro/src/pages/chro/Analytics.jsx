@@ -1,4 +1,3 @@
-import Layout from '../../components/Layout';
 
 const METRICS = [
   { label: 'Time to Fill', val: '32 days', delta: '↓ 4d vs last Q', badge: 'badge-green' },
@@ -26,7 +25,7 @@ const FUNNEL = [
 
 export default function Analytics() {
   return (
-    <Layout variant="chro">
+    <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '26px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -96,6 +95,6 @@ export default function Analytics() {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

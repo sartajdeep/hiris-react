@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 const API = 'http://localhost:3001/api'
 
@@ -89,11 +86,11 @@ export default function ProfessorCandidateProfile() {
 
   if (!candidate) return (
     <div className="bg-[#F8FAFC] min-h-screen flex flex-col font-sans">
-      <Header />
+      
       <div className="flex-1 flex items-center justify-center">
         <div className="w-10 h-10 rounded-full border-4 border-[#024e56]/20 border-t-[#024e56] animate-spin" />
       </div>
-      <Footer />
+      
     </div>
   )
 
@@ -103,13 +100,8 @@ export default function ProfessorCandidateProfile() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home',       to: '/' },
-        { label: 'Dashboard',  to: '/' },
-        { label: 'Approvals',  to: '/' },
-        { label: candidate.name },
-      ]} />
+      
+      
 
       <main className="flex-1 flex flex-col w-full max-w-[1400px] mx-auto px-8 py-6 gap-5">
 
@@ -438,7 +430,7 @@ export default function ProfessorCandidateProfile() {
         </div>
       </main>
 
-      <Footer />
+      
 
       {toast && (
         <div className={`fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-[13px] font-semibold

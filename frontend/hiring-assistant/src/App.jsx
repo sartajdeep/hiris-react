@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
 import { ThemeProvider } from './components/ThemeContext'
-import ThemeToggle from './components/ThemeToggle'
+import PortalLayout from './components/shared/PortalLayout'
 import ProtectedRoute from './auth/ProtectedRoute'
 import Dashboard from './pages/hiringassistant/Dashboard'
 import HiringRequests from './pages/hiringassistant/HiringRequests'
@@ -23,14 +23,16 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <ThemeToggle />
         <Routes>
         {/* Public auth routes */}
         <Route path="/login" element={<LoginPage />} />
-
-
-        {/* Protected portal routes */}
-        <Route path="/" element={<ProtectedRoute requiredRole="hiring-assistant"><Dashboard /></ProtectedRoute>} />
+        
+        {/* Protected portal routes wrapped in PortalLayout */}
+        <Route path="*" element={
+          <ProtectedRoute requiredRole="hiring-assistant">
+            <PortalLayout portalLabel="Hiring Assistant">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
         <Route path="/hiring-requests" element={<ProtectedRoute requiredRole="hiring-assistant"><HiringRequests /></ProtectedRoute>} />
         <Route path="/publish" element={<ProtectedRoute requiredRole="hiring-assistant"><Publish /></ProtectedRoute>} />
         <Route path="/job-posting-builder" element={<ProtectedRoute requiredRole="hiring-assistant"><JobPostingBuilder /></ProtectedRoute>} />
@@ -43,8 +45,12 @@ export default function App() {
         <Route path="/application-form" element={<ProtectedRoute requiredRole="hiring-assistant"><ApplicationForm /></ProtectedRoute>} />
         <Route path="/approval-submitted" element={<ProtectedRoute requiredRole="hiring-assistant"><ApprovalSubmitted /></ProtectedRoute>} />
         <Route path="/job-posted" element={<ProtectedRoute requiredRole="hiring-assistant"><JobPosted /></ProtectedRoute>} />
-        <Route path="/thank-you" element={<ProtectedRoute requiredRole="hiring-assistant"><ThankYouForApplying /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="/thank-you" element={<ThankYouForApplying />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </PortalLayout>
+          </ProtectedRoute>
+        } />
       </Routes>
     </AuthProvider>
     </ThemeProvider>

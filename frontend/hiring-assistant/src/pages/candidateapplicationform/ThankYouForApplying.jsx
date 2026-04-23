@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Footer from '../../components/layout/Footer'
 import { getApplicationByToken } from '../../api/client'
 
 export default function ThankYouForApplying() {
@@ -20,7 +18,7 @@ export default function ThankYouForApplying() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
+      
       
       <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 flex flex-col items-center flex-grow">
         <div className="relative mb-12 flex items-center justify-center">
@@ -71,7 +69,7 @@ export default function ThankYouForApplying() {
         </div>
       </main>
       
-      <Footer />
+      
     </div>
   )
 }

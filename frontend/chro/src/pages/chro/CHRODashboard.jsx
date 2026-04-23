@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Layout from '../../components/Layout';
 import { useToast } from '../../components/ToastContext';
 import { api } from '../../api/client';
+import dummyCandidates from '../../data/dummy_candidates.json';
 
 /* ─────────── Static seed data ─────────── */
 
@@ -27,20 +27,8 @@ const UPLOADED_RUBRICS_SEED = [
   { id: 2, name: 'Research Policy 2025.pdf',  date: 'Feb 10, 2026', size: '128 KB' },
 ];
 
-const FINAL_ROUND_SEED = [
-  { id: 10, name: 'Dr. Priya Sharma',  role: 'Asst. Professor – CS',    dept: 'Computer Science', initials: 'PS', color: '#7C3AED', aiScore: 96, hmVerdict: 'Recommended',    isNew: false },
-  { id: 11, name: 'Rahul Verma',       role: 'ML Research Associate',    dept: 'AI Dept',          initials: 'RV', color: '#0F1F3D', aiScore: 84, hmVerdict: 'Recommended',    isNew: false },
-  { id: 12, name: 'Simran Bedi',       role: 'Lab Manager – Life Sci.',  dept: 'Life Sciences',    initials: 'SB', color: '#28666E', aiScore: 80, hmVerdict: 'Recommended',    isNew: false },
-  { id: 13, name: 'Anika Nair',        role: 'Research Associate – CS', dept: 'Computer Science', initials: 'AN', color: '#D97706', aiScore: 82, hmVerdict: 'Recommended',    isNew: true },
-  { id: 14, name: 'Karan Malhotra',    role: 'Data Scientist – CS',     dept: 'Computer Science', initials: 'KM', color: '#DC2626', aiScore: 76, hmVerdict: 'On the fence',   isNew: true },
-  { id: 15, name: 'Meghna Joshi',      role: 'Lab Manager – LS',        dept: 'Life Sciences',    initials: 'MJ', color: '#2563EB', aiScore: 71, hmVerdict: 'Not Recommended', isNew: false },
-];
-
-const APPROVALS_SEED = [
-  { id: 20, name: 'Anika Nair',     role: 'Research Associate – CS', dept: 'Computer Science', initials: 'AN', color: '#D97706', aiScore: 82, hmVerdict: 'Recommended',    summary: 'Strong technical background, excellent communication. AI score 82/100. Hiring Manager recommends for hire.' },
-  { id: 21, name: 'Karan Malhotra', role: 'Data Scientist – CS',     dept: 'Computer Science', initials: 'KM', color: '#DC2626', aiScore: 76, hmVerdict: 'On the fence',   summary: 'Good domain knowledge but weak on system design. AI score 76/100. Hiring Manager is neutral — escalated to CHRO.' },
-  { id: 22, name: 'Meghna Joshi',   role: 'Lab Manager – LS',        dept: 'Life Sciences',    initials: 'MJ', color: '#2563EB', aiScore: 71, hmVerdict: 'Not Recommended', summary: 'Met minimum bar but cultural fit concerns noted. AI score 71/100. HM does not recommend — CHRO final call.' },
-];
+const FINAL_ROUND_SEED = dummyCandidates;
+const APPROVALS_SEED = dummyCandidates.filter(c => c.hmVerdict !== 'Recommended' || c.aiScore < 80);
 
 /* ─────────── Upload Modal ─────────── */
 
@@ -295,7 +283,7 @@ export default function CHRODashboard() {
   ];
 
   return (
-    <Layout variant="chro">
+    <>
       {/* Modals */}
       {showUpload  && <UploadModal onClose={() => setShowUpload(false)} onUploaded={handleUpload} />}
       {reviewCand  && <CandidateDetailModal candidate={reviewCand} onClose={() => setReviewCand(null)} onDecision={handleDecision} />}
@@ -584,6 +572,6 @@ export default function CHRODashboard() {
 
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

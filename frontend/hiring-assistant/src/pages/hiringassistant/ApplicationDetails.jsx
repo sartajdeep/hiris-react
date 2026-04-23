@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function ApplicationDetails() {
   const navigate = useNavigate()
@@ -99,13 +96,8 @@ export default function ApplicationDetails() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Active Openings', to: '/active-openings' },
-        { label: 'Application Form' }
-      ]} />
+      
+      
 
       <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 w-full flex-1">
         <div className="mb-12">
@@ -250,7 +242,7 @@ export default function ApplicationDetails() {
           </div>
         </form>
       </main>
-      <Footer />
+      
     </div>
   )
 }

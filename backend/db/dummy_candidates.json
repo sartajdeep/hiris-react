@@ -1,0 +1,8 @@
+[
+  { "id": 10, "name": "Dr. Priya Sharma", "role": "Asst. Professor – CS", "dept": "Computer Science", "initials": "PS", "color": "#7C3AED", "aiScore": 96, "hmVerdict": "Recommended", "isNew": false, "summary": "Strong academic background, multiple publications in top-tier journals." },
+  { "id": 11, "name": "Rahul Verma", "role": "ML Research Associate", "dept": "AI Dept", "initials": "RV", "color": "#0F1F3D", "aiScore": 84, "hmVerdict": "Recommended", "isNew": false, "summary": "Solid understanding of neural networks, great coding interview." },
+  { "id": 12, "name": "Simran Bedi", "role": "Lab Manager – Life Sci.", "dept": "Life Sciences", "initials": "SB", "color": "#28666E", "aiScore": 80, "hmVerdict": "Recommended", "isNew": false, "summary": "Very organized, past experience aligns well." },
+  { "id": 13, "name": "Anika Nair", "role": "Research Associate – CS", "dept": "Computer Science", "initials": "AN", "color": "#D97706", "aiScore": 82, "hmVerdict": "Recommended", "isNew": true, "summary": "Strong technical background, excellent communication." },
+  { "id": 14, "name": "Karan Malhotra", "role": "Data Scientist – CS", "dept": "Computer Science", "initials": "KM", "color": "#DC2626", "aiScore": 76, "hmVerdict": "On the fence", "isNew": true, "summary": "Good domain knowledge but weak on system design." },
+  { "id": 15, "name": "Meghna Joshi", "role": "Lab Manager – LS", "dept": "Life Sciences", "initials": "MJ", "color": "#2563EB", "aiScore": 71, "hmVerdict": "Not Recommended", "isNew": false, "summary": "Met minimum bar but cultural fit concerns noted." }
+]

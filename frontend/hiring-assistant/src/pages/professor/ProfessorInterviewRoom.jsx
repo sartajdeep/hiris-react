@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import Header from '../components/layout/Header'
 
 export default function ProfessorInterviewRoom() {
   const { roleId } = useParams()
@@ -89,7 +88,7 @@ export default function ProfessorInterviewRoom() {
   if (phase === 'review') {
     return (
       <div className="bg-[#F8FAFC] text-[#1A2B4A] min-h-screen flex flex-col font-sans">
-        <Header />
+        
         
         {/* Review Header Banner */}
         <div className="bg-[#0F1F3D] px-8 py-5 flex items-center justify-between shrink-0">

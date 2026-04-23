@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Footer from '../../components/layout/Footer'
+import dummyCandidates from '../../data/dummy_candidates.json'
 
 const API = 'http://localhost:3001/api'
 
@@ -153,11 +152,13 @@ const SAMPLE_REQUESTS = [
   { id: 'REQ-PROF-002', title: 'Postdoctoral Fellow – Neuroscience Lab', status: 'Sent for Approval', department: 'Dept of Neuroscience', job_type: 'Full-time', location: 'on-campus', requested_by: 'Dr. Julian Sterling', description: 'Lead the neural pathway mapping initiative in the Neuroscience Lab.', deadline: new Date(Date.now() + 60 * 86400000).toISOString(), created_at: new Date(Date.now() - 86400000).toISOString() },
   { id: 'REQ-PROF-001', title: 'Graduate Research Assistant – Computational Biology', status: 'Pending Review', department: 'Dept of Biology', job_type: 'Full-time', location: 'on-campus', requested_by: 'Dr. Julian Sterling', description: 'Support computational modelling work in the Biology lab.', deadline: new Date(Date.now() + 75 * 86400000).toISOString(), created_at: new Date(Date.now() - 172800000).toISOString() },
 ]
-const SAMPLE_REVIEW = [
-  { id: 9001, name: 'Elena Sokolov, PhD', role_applied: 'Postdoctoral Fellow – Neuroscience Lab', applied_date: 'Oct 20, 2023', status: 'Professor Review' },
-  { id: 9002, name: 'Marcus Aris',        role_applied: 'Graduate Research Assistant – Computational Biology', applied_date: 'Oct 18, 2023', status: 'Professor Review' },
-  { id: 9003, name: 'Linda Liao',         role_applied: 'Graduate Research Assistant – Computational Biology', applied_date: 'Oct 16, 2023', status: 'Professor Review' },
-]
+const SAMPLE_REVIEW = dummyCandidates.filter(c => c.hmVerdict === 'Recommended').map(c => ({
+  id: c.id,
+  name: c.name,
+  role_applied: c.role,
+  applied_date: 'Oct 20, 2023',
+  status: 'Professor Review'
+}))
 const SAMPLE_INTERVIEWS = [
   { id: 9005, name: 'Dr. Ananya Roy',       role_applied: 'Graduate Research Assistant – Computational Biology', interview_at: new Date(Date.now() + 12 * 60000).toISOString() },
   { id: 9006, name: 'Victor Sokolov',       role_applied: 'Lab Technician III – Genetics', interview_at: new Date(Date.now() + 90 * 60000).toISOString() },
@@ -253,7 +254,7 @@ export default function ProfessorDashboard() {
   return (
     // Full-viewport, no outer scroll
     <div className="h-screen flex flex-col overflow-hidden bg-[#F8FAFC] text-[#0F172A] antialiased font-sans">
-      <Header />
+      
 
       {/* ── Sub-nav tabs ─────────────────────────────────── */}
       <div className="h-[44px] shrink-0 bg-white border-b border-[#E2E8F0] px-8 flex items-center gap-1">
@@ -675,7 +676,7 @@ export default function ProfessorDashboard() {
       </div>
 
       {/* Footer */}
-      <Footer />
+      
 
 
 

@@ -3,8 +3,7 @@ import { ToastProvider } from './components/ToastContext'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
 import { ThemeProvider } from './components/ThemeContext'
-import ThemeToggle from './components/ThemeToggle'
-
+import PortalLayout from './components/shared/PortalLayout'
 import ProtectedRoute from './auth/ProtectedRoute'
 import './index.css'
 
@@ -13,9 +12,8 @@ import InterviewRoomCHRO from './pages/chro/InterviewRoomCHRO'
 import HiringRequests    from './pages/chro/HiringRequests'
 import HiringPolicies    from './pages/chro/HiringPolicies'
 import JobRoles          from './pages/chro/JobRoles'
-import AssignManagers    from './pages/chro/AssignManagers'
+import TeamManagement    from './pages/chro/TeamManagement'
 import Analytics         from './pages/chro/Analytics'
-import Settings          from './pages/chro/Settings'
 
 export default function App() {
   return (
@@ -23,22 +21,27 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <ToastProvider>
-            <ThemeToggle />
             <Routes>
             {/* Public auth routes */}
             <Route path="/login"      element={<LoginPage />} />
     
-
-            {/* Protected CHRO routes */}
-            <Route path="/" element={<ProtectedRoute requiredRole="chro"><CHRODashboard /></ProtectedRoute>} />
-            <Route path="/chro/interview-room/:candidateId" element={<ProtectedRoute requiredRole="chro"><InterviewRoomCHRO /></ProtectedRoute>} />
-            <Route path="/chro/requests"        element={<ProtectedRoute requiredRole="chro"><HiringRequests /></ProtectedRoute>} />
-            <Route path="/chro/policies"        element={<ProtectedRoute requiredRole="chro"><HiringPolicies /></ProtectedRoute>} />
-            <Route path="/chro/job-roles"       element={<ProtectedRoute requiredRole="chro"><JobRoles /></ProtectedRoute>} />
-            <Route path="/chro/assign-managers" element={<ProtectedRoute requiredRole="chro"><AssignManagers /></ProtectedRoute>} />
-            <Route path="/chro/analytics"       element={<ProtectedRoute requiredRole="chro"><Analytics /></ProtectedRoute>} />
-            <Route path="/chro/settings"        element={<ProtectedRoute requiredRole="chro"><Settings /></ProtectedRoute>} />
-            <Route path="*"                     element={<Navigate to="/login" replace />} />
+            {/* Protected CHRO routes wrapped in PortalLayout */}
+            <Route path="*" element={
+              <ProtectedRoute requiredRole="chro">
+                <PortalLayout portalLabel="CHRO Portal">
+                  <Routes>
+                    <Route path="/" element={<CHRODashboard />} />
+                    <Route path="/chro/interview-room/:candidateId" element={<InterviewRoomCHRO />} />
+                    <Route path="/chro/requests"        element={<HiringRequests />} />
+                    <Route path="/chro/policies"        element={<HiringPolicies />} />
+                    <Route path="/chro/job-roles"       element={<JobRoles />} />
+                    <Route path="/chro/team-management" element={<TeamManagement />} />
+                    <Route path="/chro/analytics"       element={<Analytics />} />
+                    <Route path="*"                     element={<Navigate to="/" replace />} />
+                  </Routes>
+                </PortalLayout>
+              </ProtectedRoute>
+            } />
           </Routes>
         </ToastProvider>
       </AuthProvider>

@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 import { getAdmissionsStats, getCandidates, closeOpening } from '../../api/client'
 
 export default function Admissions() {
@@ -42,12 +39,8 @@ export default function Admissions() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Admissions' }
-      ]} />
+      
+      
 
       <main className="flex-grow flex flex-col items-center px-6 lg:px-20 py-8">
         <div className="w-full max-w-6xl">
@@ -170,7 +163,7 @@ export default function Admissions() {
         </div>
       </div>
 
-      <Footer />
+      
     </div>
   )
 }

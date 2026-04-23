@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
 import { ThemeProvider } from './components/ThemeContext'
-import ThemeToggle from './components/ThemeToggle'
+import PortalLayout from './components/shared/PortalLayout'
 import ProtectedRoute from './auth/ProtectedRoute'
 import ProfessorDashboard        from './pages/professor/ProfessorDashboard'
 import ProfessorCandidateProfile from './pages/professor/ProfessorCandidateProfile'
@@ -13,19 +13,25 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <ThemeToggle />
         <Routes>
         {/* Public auth routes */}
         <Route path="/login"      element={<LoginPage />} />
 
-
-        {/* Protected Professor routes */}
-        <Route path="/"                  element={<ProtectedRoute requiredRole="professor"><ProfessorDashboard /></ProtectedRoute>} />
+        {/* Protected Professor routes wrapped in PortalLayout */}
+        <Route path="*" element={
+          <ProtectedRoute requiredRole="professor">
+            <PortalLayout portalLabel="Faculty Portal">
+              <Routes>
+                <Route path="/"                  element={<ProfessorDashboard />} />
         <Route path="/candidate/:id"     element={<ProtectedRoute requiredRole="professor"><ProfessorCandidateProfile /></ProtectedRoute>} />
         <Route path="/jd-review"         element={<ProtectedRoute requiredRole="professor"><ProfessorJDReview /></ProtectedRoute>} />
         <Route path="/jd-review/:roleId" element={<ProtectedRoute requiredRole="professor"><ProfessorJDReview /></ProtectedRoute>} />
-        <Route path="/interview/:roleId" element={<ProtectedRoute requiredRole="professor"><ProfessorInterviewRoom /></ProtectedRoute>} />
-        <Route path="*"                  element={<Navigate to="/login" replace />} />
+                <Route path="/interview/:roleId" element={<ProfessorInterviewRoom />} />
+                <Route path="*"                  element={<Navigate to="/" replace />} />
+              </Routes>
+            </PortalLayout>
+          </ProtectedRoute>
+        } />
       </Routes>
     </AuthProvider>
     </ThemeProvider>

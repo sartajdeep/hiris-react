@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function AiChat() {
   const navigate = useNavigate()
@@ -92,14 +89,8 @@ export default function AiChat() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Active Openings', to: '/active-openings' },
-        { label: 'Application Form', to: '/application-form' },
-        { label: 'Ai Chat' }
-      ]} />
+      
+      
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 w-full">
         <div className="max-w-2xl w-full bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] border border-[#E2E8F0] p-10 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-px transition-all duration-150">
@@ -141,7 +132,7 @@ export default function AiChat() {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   )
 }

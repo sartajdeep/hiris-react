@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function JobPostingBuilder() {
   const [searchParams] = useSearchParams()
@@ -106,13 +103,8 @@ export default function JobPostingBuilder() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Hiring Requests', to: '/hiring-requests' },
-        { label: 'Job Posting Builder' }
-      ]} />
+      
+      
 
       <main className="max-w-7xl mx-auto px-6 py-8 flex flex-col lg:flex-row gap-5 w-full">
         <section className="w-full space-y-8 pb-20">
@@ -348,7 +340,7 @@ export default function JobPostingBuilder() {
           </div>
         </section>
       </main>
-      <Footer />
+      
     </div>
   )
 }

@@ -1,8 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Header from '../../components/layout/Header'
-import Breadcrumb from '../../components/layout/Breadcrumb'
-import Footer from '../../components/layout/Footer'
 
 export default function AdmissionsEditPosting() {
   const navigate = useNavigate()
@@ -26,13 +23,8 @@ export default function AdmissionsEditPosting() {
 
   return (
     <div className="bg-[#F8FAFC] text-[#0F172A] antialiased min-h-screen flex flex-col font-sans">
-      <Header />
-      <Breadcrumb items={[
-        { label: 'Home', to: '/' },
-        { label: 'Dashboard', to: '/' },
-        { label: 'Admissions', to: '/admissions' },
-        { label: 'Edit Posting' }
-      ]} />
+      
+      
 
       <main className="max-w-7xl mx-auto px-6 py-8 flex flex-col lg:flex-row gap-5 w-full">
         <section className="w-full space-y-8 pb-20 lg:w-full">
@@ -234,7 +226,7 @@ export default function AdmissionsEditPosting() {
         </section>
       </main>
 
-      <Footer />
+      
     </div>
   )
 }
