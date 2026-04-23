@@ -22,7 +22,7 @@ const MicrosoftIcon = () => (
 )
 
 export default function LoginPage() {
-  const { login, isOnboarded, completeOnboarding } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -51,14 +51,9 @@ export default function LoginPage() {
       const currentPort = window.location.port
       const targetPort = new URL(user.portalUrl).port
       if (currentPort === targetPort) {
-        if (!isOnboarded()) {
-          navigate('/onboarding')
-        } else {
-          navigate('/')
-        }
+        navigate('/')
       } else {
-        const destination = isOnboarded() ? user.portalUrl : `${user.portalUrl}/onboarding`
-        window.location.href = destination
+        window.location.href = user.portalUrl
       }
     }, 700)
   }

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastProvider } from './components/ToastContext'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
-import OnboardingWizard from './auth/OnboardingWizard'
+
 import ProtectedRoute from './auth/ProtectedRoute'
 import './index.css'
 
@@ -23,7 +23,7 @@ export default function App() {
           <Routes>
             {/* Public auth routes */}
             <Route path="/login"      element={<LoginPage />} />
-            <Route path="/onboarding" element={<OnboardingWizard />} />
+    
 
             {/* Protected CHRO routes */}
             <Route path="/" element={<ProtectedRoute requiredRole="chro"><CHRODashboard /></ProtectedRoute>} />

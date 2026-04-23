@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthContext'
 import LoginPage from './auth/LoginPage'
-import OnboardingWizard from './auth/OnboardingWizard'
+
 import ProtectedRoute from './auth/ProtectedRoute'
 import Dashboard from './pages/hiringassistant/Dashboard'
 import HiringRequests from './pages/hiringassistant/HiringRequests'
@@ -24,7 +24,7 @@ export default function App() {
       <Routes>
         {/* Public auth routes */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/onboarding" element={<OnboardingWizard />} />
+
 
         {/* Protected portal routes */}
         <Route path="/" element={<ProtectedRoute requiredRole="hiring-assistant"><Dashboard /></ProtectedRoute>} />
