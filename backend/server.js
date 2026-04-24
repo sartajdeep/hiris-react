@@ -17,6 +17,34 @@ app.use(cors({
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
+// Root Landing Page
+app.get('/', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>HIRIS API Status</title>
+        <style>
+          body { font-family: -apple-system, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #0F172A; color: white; }
+          .card { background: #1E293B; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+          .status { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10B981; padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 12px; text-transform: uppercase; margin-bottom: 20px; }
+          h1 { margin: 0 0 10px; font-weight: 900; letter-spacing: -1px; }
+          p { color: #94A3B8; margin-bottom: 30px; }
+          .btn { display: inline-block; background: #28666E; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; transition: all 0.2s; }
+          .btn:hover { background: #1E4D54; transform: translateY(-2px); }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="status"><span style="width:8px;height:8px;background:#10B981;border-radius:50%"></span> API is Live</div>
+          <h1>HIRIS Backend</h1>
+          <p>The hiring intelligence engine is running on port ${PORT}.</p>
+          <a href="/api-docs" class="btn">View API Documentation</a>
+        </div>
+      </body>
+    </html>
+  `)
+})
+
 // Swagger definition
 const swaggerDefinition = {
   openapi: '3.0.0',

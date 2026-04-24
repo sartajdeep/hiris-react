@@ -46,7 +46,7 @@ Complete list of all implemented features across every portal.
 
 ---
 
-## 🗂️ Hiring Assistant Portal
+## 🗂️ Hiring Manager Portal
 
 | Feature | Status | Notes |
 |---|---|---|
@@ -99,7 +99,7 @@ Complete list of all implemented features across every portal.
 
 | Feature | Endpoint | Portal |
 |---|---|---|
-| Job Description Generation | `POST /api/ai/generate-jd` | Hiring Assistant |
+| Job Description Generation | `POST /api/ai/generate-jd` | Hiring Manager |
 | Dynamic Candidate Pre-screening | `POST /api/ai/chat-response` | Candidate |
 | Live Interview Suggestions | `POST /api/ai/interview-suggestion` | CHRO, Professor |
 | Candidate Match Summary | `POST /api/ai/candidate-summary` | Any profile view |

@@ -329,7 +329,7 @@ hiringrequestsRouter.post('/', async (req, res) => {
   res.status(201).json(rows[0])
 })
 
-// Hiring Assistant: update status (includes 'Sent for Approval' etc.)
+// Hiring Manager: update status (includes 'Sent for Approval' etc.)
 hiringrequestsRouter.patch('/:id/status', async (req, res) => {
   await db.query('UPDATE hiring_requests SET status=$1 WHERE id=$2', [req.body.status, req.params.id])
   res.json({ id: req.params.id, status: req.body.status })

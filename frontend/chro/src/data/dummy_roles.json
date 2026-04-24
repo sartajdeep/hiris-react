@@ -1,0 +1,30 @@
+[
+  {
+    "id": "role_1",
+    "name": "CHRO",
+    "description": "Full access to organization-wide hiring metrics, final approvals, and role management.",
+    "isCustom": false,
+    "permissions": ["view_dashboard", "manage_candidates", "manage_roles", "manage_users", "approve_hires", "manage_policies"]
+  },
+  {
+    "id": "role_2",
+    "name": "Hiring Manager",
+    "description": "Manages candidate pipelines, drafts Job Descriptions, and handles initial screening.",
+    "isCustom": false,
+    "permissions": ["view_pipeline", "draft_jd", "screen_candidates", "view_ai_scores"]
+  },
+  {
+    "id": "role_3",
+    "name": "Professor",
+    "description": "Departmental hiring manager. Requests roles and conducts interviews.",
+    "isCustom": false,
+    "permissions": ["request_role", "review_jd", "conduct_interview", "view_department_candidates"]
+  },
+  {
+    "id": "role_4",
+    "name": "HR Intern",
+    "description": "Assists with candidate screening but cannot view AI scores or finalize hires.",
+    "isCustom": true,
+    "permissions": ["view_pipeline", "draft_jd"]
+  }
+]

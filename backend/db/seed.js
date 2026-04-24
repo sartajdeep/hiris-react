@@ -38,7 +38,7 @@ async function seed() {
     ['REQ-PROF-001','Pending Review','Graduate Research Assistant – Computational Biology','Dr. Julian Sterling','Dept of Biology','Full-time',1,'Sept 1, 2026','2026-08-15','PROF-001',null],
     ['REQ-PROF-002','Sent for Approval','Postdoctoral Fellow – Neuroscience Lab','Dr. Julian Sterling','Dept of Neuroscience','Full-time',1,'Aug 1, 2026','2026-07-15','PROF-001',null],
     ['REQ-PROF-003','Approved','Lab Technician III – Genetics','Dr. Julian Sterling','Genetics Lab','Full-time',2,'Jul 1, 2026','2026-06-15','PROF-001',null],
-    // Other department requests (visible in Hiring Assistant's board)
+    // Other department requests (visible in Hiring Manager's board)
     ['REQ-2642','Pending Review','Computer Science – AI Research Assistant','Prof. Arpan Kar','Dept of Computer Science','Full-time',2,'Sept 1, 2026','2026-08-15','PROF-002',null],
     ['REQ-2646','Pending Review','Liberal Arts – Writing Center Tutor','Prof. Nandini Das','Humanities','Part-time',2,'Sept 1, 2026','2026-08-15','PROF-003',null],
     ['REQ-2651','Pending Review','Physics – Lab Technician','Dr. Ramesh Iyer','Dept of Physics','Full-time',1,'Oct 1, 2026','2026-09-01','PROF-004',null],

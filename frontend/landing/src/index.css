@@ -1,0 +1,245 @@
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+/* Loaded via index.html */
+
+/* ── Design Tokens ────────────────────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --teal:        #28666E;
+  --teal-light:  #3d8a93;
+  --teal-dark:   #1e5059;
+  --teal-10:     rgba(40, 102, 110, 0.10);
+  --teal-20:     rgba(40, 102, 110, 0.20);
+
+  /* Neutrals */
+  --navy:        #0F172A;
+  --slate-800:   #1E293B;
+  --slate-700:   #334155;
+  --slate-600:   #475569;
+  --slate-500:   #64748B;
+  --slate-400:   #94A3B8;
+  --slate-200:   #E2E8F0;
+  --slate-100:   #F1F5F9;
+  --slate-50:    #F8FAFC;
+  --white:       #FFFFFF;
+
+  /* Semantic */
+  --bg:          #F8FAFC;
+  --surface:     #FFFFFF;
+  --border:      #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted:  #94A3B8;
+  --footer-bg:   #0F172A;
+
+  /* Typography */
+  --font-h: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.14);
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5 { font-family: var(--font-h); font-weight: 800; line-height: 1.15; color: var(--navy); }
+h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+h3 { font-size: 1.2rem; font-weight: 700; }
+
+/* ── Layout Helpers ───────────────────────────────────────────────────────── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+.section    { padding: 96px 0; }
+.section-sm { padding: 64px 0; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 13px 28px; border-radius: 8px;
+  background: var(--teal); color: white;
+  font-size: 14px; font-weight: 700; font-family: var(--font-body);
+  border: none; transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(40,102,110,0.3);
+}
+.btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(40,102,110,0.35); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 26px; border-radius: 8px;
+  background: transparent; color: var(--navy);
+  font-size: 14px; font-weight: 600; font-family: var(--font-body);
+  border: 1.5px solid var(--border); transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-10); }
+
+.btn-white {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 13px 28px; border-radius: 8px;
+  background: white; color: var(--teal);
+  font-size: 14px; font-weight: 700; font-family: var(--font-body);
+  border: none; transition: all 0.15s; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.btn-white:hover { background: var(--slate-50); transform: translateY(-1px); }
+
+/* ── Badge ────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--teal-10); color: var(--teal);
+  border: 1px solid rgba(40,102,110,0.2);
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+.card {
+  background: white; border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px;
+  box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+/* ── Material Symbols ─────────────────────────────────────────────────────── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--slate-100); }
+::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 10px; }
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-up { animation: fadeUp 0.5s ease both; }
+
+/* ── Dark Mode Overrides ────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:          #0F172A;
+  --surface:     #1E293B;
+  --border:      #334155;
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted:  #94A3B8;
+  --footer-bg:   #020617;
+  --navy:        #FFFFFF; /* Invert navy text to white in dark mode */
+  --white:       #1E293B; /* White surfaces become dark slate */
+  --slate-50:    #111827;
+  --slate-100:   #1E293B;
+  --slate-200:   #334155;
+  --slate-400:   #94A3B8;
+  --slate-500:   #CBD5E1;
+  --slate-600:   #CBD5E1;
+  --slate-700:   #E2E8F0;
+}
+
+/* ── Theme Toggle Component ─────────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  transform: scale(1.05);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ── Global Transitions & Animations ────────────────────────────────────── */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.btn, .btn-primary, .btn-secondary, button {
+  transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:active, .btn-primary:active, .btn-secondary:active, button:active {
+  transform: scale(0.97);
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.slide-in-right { animation: slideInRight 0.4s ease both; }
+
+@keyframes pulseSubtle {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+.pulse-subtle { animation: pulseSubtle 2s infinite; }
+
+[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] :is(section, div)[style*="background: white"],
+[data-theme="dark"] :is(section, div)[style*="background:white"] {
+  background: var(--surface) !important;
+}
+
+[data-theme="dark"] :is(input, textarea, select) {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+/* Ensure inline hardcoded colors stay readable in dark mode */
+[data-theme="dark"] [style*="color: #0F172A"],
+[data-theme="dark"] [style*="color:#0F172A"] {
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] [style*="color: #475569"],
+[data-theme="dark"] [style*="color: #64748B"],
+[data-theme="dark"] [style*="color:#475569"],
+[data-theme="dark"] [style*="color:#64748B"] {
+  color: var(--text-secondary) !important;
+}
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background:white"] {
+  background: var(--surface) !important;
+}
